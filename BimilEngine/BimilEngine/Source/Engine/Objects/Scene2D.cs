@@ -1,0 +1,265 @@
+using System.Collections.Generic;
+using System.Linq;
+using BimilEngine.Source.Engine.Interfaces;
+using BimilEngine.Source.Engine.Managers;
+using BimilEngine.Source.Engine.Models;
+using BimilEngine.Source.Engine.Objects.Bases;
+
+namespace BimilEngine.Source.Engine.Objects
+{
+    public class Scene2D
+    {
+        /// <summary>
+        /// Name of the scene.
+        /// </summary>
+        public string Name { get; }
+
+        /// <summary>
+        /// Gadgets collection. Use the AddGadget(s) and RemoveGadget(s) methods to add and remove gadgets.
+        /// </summary>
+        public IReadOnlyCollection<object> Gadgets => _gadgets;
+        private readonly HashSet<object> _gadgets = new();
+        /// <summary>
+        /// Sprites collection. Use the AddSprite(s) and RemoveSprite(s) methods to add and remove sprites.
+        /// </summary>
+        public IReadOnlyCollection<object> Sprites => _sprites;
+        private readonly HashSet<object> _sprites = new();
+        /// <summary>
+        /// Debug draws collection. Use the AddDebugDraw(s) and RemoveDebugDraw(s) methods to add and remove debug draws.
+        /// </summary>
+        public IReadOnlyCollection<DebugDraw> DebugDraws => _debugDraws;
+        private readonly HashSet<DebugDraw> _debugDraws = new();
+        // Components
+        // TODO: Add component collections if needed
+
+        // Everything
+        public IReadOnlyCollection<object> Everything
+        {
+            get
+            {
+                List<IReadOnlyCollection<object>> everything = new()
+                {
+                    Gadgets,
+                    Sprites,
+                    DebugDraws,
+                    // TODO: Add all new collections here
+                };
+                
+                return everything.SelectMany(e => e).ToList();
+            }
+        }
+
+        /// <summary>
+        /// Active cameras collection. Use the AddActiveCamera(s) and RemoveActiveCamera(s) methods to add and remove active cameras.
+        /// </summary>
+        public IReadOnlyCollection<Camera2D> ActiveCameras => _activeCameras;
+        private readonly HashSet<Camera2D> _activeCameras = new();
+
+        public Scene2D(string name)
+        {
+            Name = name;
+        }
+
+        /// <summary>
+        /// Add a gadget.
+        /// </summary>
+        public void AddGadget(object gadget)
+        {
+            if (gadget is not Gadget2D) throw new System.Exception("Gadget must be of type Gadget2D");
+
+            if (((Gadget2D)gadget).AssociatedScene == null)
+                ((Gadget2D)gadget).AssociatedScene = this;
+            else if (((Gadget2D)gadget).AssociatedScene != this)
+                throw new System.Exception("Gadget must be associated with this scene");
+
+            _gadgets.Add(gadget);
+        }
+
+        /// <summary>
+        /// Add gadgets.
+        /// </summary>
+        public void AddGadgets(object[] gadgets)
+        {
+            foreach (object gadget in gadgets)
+            {
+                AddGadget(gadget);
+            }
+        }
+
+        /// <summary>
+        /// Remove a gadget.
+        /// </summary>
+        public void RemoveGadget(object gadget, bool destroyGadget = true)
+        {
+            if (gadget is not Gadget2D) throw new System.Exception("Gadget must be of type Gadget2D");
+
+            if (destroyGadget)
+            {
+                Gadget2D gadgetReference = (Gadget2D)Gadgets.FirstOrDefault(t => t == gadget);
+                gadgetReference.Destroy(removeObjectFromScene: false);
+            }
+
+            _gadgets.Remove(gadget);
+        }
+
+        /// <summary>
+        /// Remove gadgets.
+        /// </summary>
+        public void RemoveGadgets(object[] gadgets, bool destroyGadgets = true)
+        {
+            foreach (object gadget in gadgets)
+            {
+                RemoveGadget(gadget, destroyGadgets);
+            }
+        }
+
+        /// <summary>
+        /// Add a sprite.
+        /// </summary>
+        public void AddSprite(object sprite)
+        {
+            if (sprite is not Sprite2D && sprite is not PhysicsSprite2D) throw new System.Exception("Sprite must be of type Sprite2D or PhysicsSprite2D");
+
+            if (((Transform2D)sprite).AssociatedScene == null)
+                ((Transform2D)sprite).AssociatedScene = this;
+            else if (((Transform2D)sprite).AssociatedScene != this)
+                throw new System.Exception("Sprite must be associated with this scene");
+
+            if (sprite is Sprite2D sprite2D && _sprites.Any(s => s is PhysicsSprite2D))
+                LogManager.DoConsoleLog($"Sprite '{sprite2D.Name}' is a Sprite2D, but there are PhysicsSprite2Ds in the scene. This may cause issues.", LogLevel.Warning);
+            else if (sprite is PhysicsSprite2D physicsSprite2D && _sprites.Any(s => s is Sprite2D))
+                LogManager.DoConsoleLog($"Sprite '{physicsSprite2D.Name}' is a PhysicsSprite2D, but there are Sprite2Ds in the scene. This may cause issues.", LogLevel.Warning);
+
+            _sprites.Add(sprite);
+        }
+
+        /// <summary>
+        /// Add sprites.
+        /// </summary>
+        public void AddSprites(object[] sprites)
+        {
+            foreach (object sprite in sprites)
+            {
+                AddSprite(sprite);
+            }
+        }
+
+        /// <summary>
+        /// Remove a sprite.
+        /// </summary>
+        public void RemoveSprite(object sprite, bool destroySprite = true)
+        {
+            if (sprite is not Sprite2D && sprite is not PhysicsSprite2D) throw new System.Exception("Sprite must be of type Sprite2D or PhysicsSprite2D");
+
+            if (destroySprite)
+            {
+                object spriteReference = Sprites.FirstOrDefault(s => s == sprite);
+                if (spriteReference is IDestroyable sprite2D)
+                    sprite2D.Destroy(removeObjectFromScene: false);
+            }
+
+            _sprites.Remove(sprite);
+        }
+
+        /// <summary>
+        /// Remove sprites.
+        /// </summary>
+        public void RemoveSprites(object[] sprites, bool destroySprites = true)
+        {
+            foreach (object sprite in sprites)
+            {
+                RemoveSprite(sprite, destroySprites);
+            }
+        }
+
+        /// <summary>
+        /// Add or update an object to be drawn as debug. Uses debugDraw.Object as the reference.
+        /// </summary>
+        public void AddOrUpdateDebugDraw(DebugDraw debugDraw)
+        {
+            DebugDraw existingDebugDraw = DebugDraws.FirstOrDefault(d => d.Object == debugDraw.Object);
+            if (existingDebugDraw != null)
+            {
+                existingDebugDraw.Color = debugDraw.Color;
+                existingDebugDraw.LifeTime = debugDraw.LifeTime;
+                existingDebugDraw.CameraLevel = debugDraw.CameraLevel;
+            }
+            else
+            {
+                _debugDraws.Add(debugDraw);
+            }
+        }
+
+        /// <summary>
+        /// Add or update objects to be drawn as debug. Uses debugDraw.Object as the reference.
+        /// </summary>
+        public void AddOrUpdateDebugDraws(DebugDraw[] debugDraws)
+        {
+            foreach (DebugDraw debugDraw in debugDraws)
+            {
+                AddOrUpdateDebugDraw(debugDraw);
+            }
+        }
+
+        /// <summary>
+        /// Remove an object from being drawn as debug. Uses debugDraw.Object as the reference.
+        /// </summary>
+        public void RemoveDebugDraw(DebugDraw debugDraw)
+        {
+            DebugDraw existingDebugDraw = DebugDraws.FirstOrDefault(d => d.Object == debugDraw.Object);
+            if (existingDebugDraw != null)
+            {
+                _debugDraws.Remove(existingDebugDraw);
+            }
+        }
+
+        /// <summary>
+        /// Remove objects from being drawn as debug. Uses debugDraw.Object as the reference.
+        /// </summary>
+        public void RemoveDebugDraws(DebugDraw[] debugDraws)
+        {
+            foreach (DebugDraw debugDraw in debugDraws)
+            {
+                RemoveDebugDraw(debugDraw);
+            }
+        }
+
+        /// <summary>
+        /// Add a camera to be used for drawing.
+        /// </summary>
+        public void AddActiveCamera(Camera2D camera)
+        {
+            _activeCameras.Add(camera);
+        }
+
+        /// <summary>
+        /// Add cameras to be used for drawing.
+        /// </summary>
+        public void AddActiveCameras(Camera2D[] cameras)
+        {
+            foreach (Camera2D camera in cameras)
+            {
+                AddActiveCamera(camera);
+            }
+        }
+
+        /// <summary>
+        /// Remove a camera from being used for drawing.
+        /// </summary>
+        public void RemoveActiveCamera(Camera2D camera)
+        {
+            _activeCameras.Remove(camera);
+        }
+
+        /// <summary>
+        /// Remove cameras from being used for drawing.
+        /// </summary>
+        public void RemoveActiveCameras(Camera2D[] cameras)
+        {
+            foreach (Camera2D camera in cameras)
+            {
+                RemoveActiveCamera(camera);
+            }
+        }
+    }
+}
