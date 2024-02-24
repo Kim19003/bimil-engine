@@ -125,6 +125,13 @@ namespace BimilEngine.Source.GameLogic
             if (_unloadContentCalled) LogManager.DoConsoleLog("Multiple calls on UnloadContent()", LogLevel.Warning);
 
             AudioHandler.Dispose();
+            foreach (object thing in _sceneHandler.Everything.SelectMany(scene => scene.Things))
+            {
+                if (thing is IDisposable disposable)
+                {
+                    disposable.Dispose();
+                }
+            }
 
             // Unload Globals' ContentManager and SpriteBatch
             Globals.Content.Unload();

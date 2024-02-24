@@ -1,5 +1,3 @@
-using System;
-using System.Diagnostics;
 using System.Linq;
 using Genbox.VelcroPhysics.Collision.Shapes;
 using Genbox.VelcroPhysics.Definitions;
@@ -15,17 +13,19 @@ using BimilEngine.Source.Engine.Objects.Bases;
 using BimilEngine.Source.Engine.Other;
 using Vector2 = Microsoft.Xna.Framework.Vector2;
 using Genbox.VelcroPhysics.Collision.ContactSystem;
-using System.Collections.Generic;
-using BimilEngine.Source.Engine.Models.DrawShapes;
+using BimilEngine.Source.Engine.Interfaces;
+using BimilEngine.Source.Engine.Handlers;
 
 namespace BimilEngine.Source.GameLogic.Sprites
 {
-    public class Player : PhysicsSprite2D
+    public class Player : PhysicsSprite2D, IAnimatable
     {
         public float MovementSpeed { get; set; } = 160f;
         public float JumpPower { get; set; } = 200f;
 
         public bool IsGrounded { get; private set; }
+
+        public AnimationHandler AnimationHandler { get; set; } = new();
 
         public Player(string texturePath, Vector2 position, Vector2 scale, Vector2 physicsScale, int cameraLevel = 0, string name = "", string tag = "",
             Scene2D associatedScene = null) : base(texturePath, position, scale, physicsScale, cameraLevel, name, tag, associatedScene)

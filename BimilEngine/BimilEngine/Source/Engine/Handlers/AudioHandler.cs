@@ -67,6 +67,16 @@ namespace BimilEngine.Source.Engine.Handlers
             {
                 soundEffectInstance.Dispose();
             }
+
+            foreach (Song song in Songs.Values)
+            {
+                song.Dispose();
+            }
+
+            foreach (SoundEffect soundEffect in SoundEffects.Values)
+            {
+                soundEffect.Dispose();
+            }
         }
     }
 }

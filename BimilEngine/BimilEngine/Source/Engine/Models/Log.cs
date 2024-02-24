@@ -10,6 +10,7 @@ namespace BimilEngine.Source.Engine.Models
         public DateTime Time { get; set; }
         public LogType Type { get; set; }
         public Vector2 Position { get; set; }
+        public ShadowSettings ShadowSettings { get; set; }
 
         public Log()
         {

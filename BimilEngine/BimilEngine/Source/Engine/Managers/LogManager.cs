@@ -52,7 +52,7 @@ namespace BimilEngine.Source.Engine.Managers
         public static int ShownLogVerticalSpacing { get; } = -30;
 
         private static readonly int _maxShownScreenLogs = 10;
-        public static Log DoScreenLog(string message, LogLevel logLevel = LogLevel.Information, int lifeTime = 5000)
+        public static Log DoScreenLog(string message, LogLevel logLevel = LogLevel.Information, int lifeTime = 5000, ShadowSettings shadowSettings = null)
         {
             Vector2 logScreenStartPosition = LogScreenStartPosition;
             Vector2 logScreenPosition = logScreenStartPosition;
@@ -75,7 +75,10 @@ namespace BimilEngine.Source.Engine.Managers
                 logScreenPosition = lastLog.Position + new Vector2(0, ShownLogVerticalSpacing);
             }
 
-            Log thisLog = new(message, logLevel, DateTime.Now, LogType.Screen, logScreenPosition);
+            Log thisLog = new(message, logLevel, DateTime.Now, LogType.Screen, logScreenPosition)
+            {
+                ShadowSettings = shadowSettings
+            };
 
             ShownScreenLogs.AddToSequence(thisLog);
 

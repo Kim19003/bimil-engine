@@ -223,6 +223,10 @@ namespace BimilEngine.Source.Engine.Functions
                 return;
             }
 
+            if (log.ShadowSettings != null)
+            {
+                Globals.SpriteBatch.DrawString(Globals.LogFont, log.Message, log.Position + log.ShadowSettings.Offset, log.ShadowSettings.Color);
+            }
             Globals.SpriteBatch.DrawString(Globals.LogFont, log.Message, log.Position, color);
         }
 

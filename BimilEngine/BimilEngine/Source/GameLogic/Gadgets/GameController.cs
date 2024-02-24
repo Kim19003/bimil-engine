@@ -32,13 +32,15 @@ namespace BimilEngine.Source.GameLogic.Gadgets
 
             if (isDebug)
             {
+                ShadowSettings shadowSettings = new(new Vector2(1, 1), new(0, 0, 0, 0.75f));
+
                 if (log2 == null)
-                    log2 = LogManager.DoScreenLog($"FPS: {Environment2D.ScreenHandler.FramesPerSecondInt}", LogLevel.Information, 0);
+                    log2 = LogManager.DoScreenLog($"FPS: {Environment2D.ScreenHandler.FramesPerSecondInt}", LogLevel.Information, 0, shadowSettings);
                 else
                     log2.Message = $"FPS: {Environment2D.ScreenHandler.FramesPerSecondInt}";
 
                 if (log1 == null)
-                    log1 = LogManager.DoScreenLog($"Camera depth: {activeCamera.Depth}", LogLevel.Error, 0);
+                    log1 = LogManager.DoScreenLog($"Camera depth: {activeCamera.Depth}", LogLevel.Error, 0, shadowSettings);
                 else
                     log1.Message = $"Camera depth: {activeCamera.Depth}";
 
