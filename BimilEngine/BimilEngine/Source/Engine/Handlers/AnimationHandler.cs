@@ -11,6 +11,36 @@ namespace BimilEngine.Source.Engine.Handlers
         /// </summary>
         public Dictionary<string, Animation> Animations { get; } = new();
 
+        /// <summary>
+        /// Play the animation with the given id.
+        /// </summary>
+        public void Play(string animationId)
+        {
+            if (Animations.ContainsKey(animationId))
+            {
+                Animations[animationId].IsPlaying = true;
+            }
+            else
+            {
+                throw new Exception($"Animation with id '{animationId}' does not exist");
+            }
+        }
+
+        /// <summary>
+        /// Stop the animation with the given id.
+        /// </summary>
+        public void Stop(string animationId)
+        {
+            if (Animations.ContainsKey(animationId))
+            {
+                Animations[animationId].IsPlaying = false;
+            }
+            else
+            {
+                throw new Exception($"Animation with id '{animationId}' does not exist");
+            }
+        }
+
         public void Dispose()
         {
             foreach (Animation animation in Animations.Values)
