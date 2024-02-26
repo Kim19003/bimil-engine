@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using BimilEngine.Source.Engine.Models;
+using Boolean = BimilEngine.Source.Engine.Other.Boolean;
 
 namespace BimilEngine.Source.Engine.Handlers
 {
@@ -12,13 +14,72 @@ namespace BimilEngine.Source.Engine.Handlers
         public Dictionary<string, Animation> Animations { get; } = new();
 
         /// <summary>
-        /// Play the animation with the given id.
+        /// Add an animation to the handler.
         /// </summary>
-        public void Play(string animationId)
+        public void AddAnimation(string id, Animation animation)
+        {
+            if (Animations.ContainsKey(id))
+            {
+                throw new Exception($"Animation with id '{id}' already exists");
+            }
+
+            Animations.Add(id, animation);
+        }
+
+        /// <summary>
+        /// Add animations to the handler.
+        /// </summary>
+        public void AddAnimations((string Id, Animation Animation)[] animations)
+        {
+            foreach ((string Id, Animation Animation) in animations)
+            {
+                AddAnimation(Id, Animation);
+            }
+        }
+
+        /// <summary>
+        /// Remove an animation from the handler.
+        /// </summary>
+        public void RemoveAnimation(string id)
+        {
+            if (Animations.ContainsKey(id))
+            {
+                Animations[id].Dispose();
+                Animations.Remove(id);
+            }
+            else
+            {
+                throw new Exception($"Animation with id '{id}' does not exist");
+            }
+        }
+
+        /// <summary>
+        /// Remove animations from the handler.
+        /// </summary>
+        public void RemoveAnimations(string[] ids)
+        {
+            foreach (string id in ids)
+            {
+                RemoveAnimation(id);
+            }
+        }
+
+        /// <summary>
+        /// Play the animation with the given id. Use this to ensure that only one animation is playing at a time.
+        /// </summary>
+        public void PlayAnimation(string animationId)
         {
             if (Animations.ContainsKey(animationId))
             {
                 Animations[animationId].IsPlaying = true;
+
+                foreach (var animation in Animations)
+                {
+                    if (animation.Key != animationId)
+                    {
+                        animation.Value.IsPlaying = false;
+                    }
+                }
             }
             else
             {
@@ -29,7 +90,7 @@ namespace BimilEngine.Source.Engine.Handlers
         /// <summary>
         /// Stop the animation with the given id.
         /// </summary>
-        public void Stop(string animationId)
+        public void StopAnimation(string animationId)
         {
             if (Animations.ContainsKey(animationId))
             {
@@ -39,6 +100,14 @@ namespace BimilEngine.Source.Engine.Handlers
             {
                 throw new Exception($"Animation with id '{animationId}' does not exist");
             }
+        }
+
+        /// <summary>
+        /// Get all the ongoing animations.
+        /// </summary>
+        public Animation[] GetOngoingAnimations()
+        {
+            return Animations.Values.Where(animation => animation.IsPlaying && Boolean.IsNullOrFalse(animation.HasFinished)).ToArray();
         }
 
         public void Dispose()

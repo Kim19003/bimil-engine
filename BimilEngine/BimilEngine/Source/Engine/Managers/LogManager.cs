@@ -36,6 +36,20 @@ namespace BimilEngine.Source.Engine.Managers
             }
         }
 
+        public static bool EnableScreenLogging { get; set; } = true;
+        public static bool EnableConsoleLogging { get; set; } = true;
+        public static bool EnableFileLogging { get; set; } = true;
+
+        public static IReadOnlyDictionary<string, string> Abbreviations { get; } = new Dictionary<string, string>
+        {
+            { "INFO", "Information" },
+            { "WARN", "Warning" },
+            { "ERROR", "Error" },
+            { "DEBUG", "Debug" },
+
+            { "PUA", "Potentially Unwanted Action" },
+        };
+
         /// <summary>
         /// The shown screen logs. Key = order of the log, value = the log.
         /// </summary>
@@ -54,6 +68,9 @@ namespace BimilEngine.Source.Engine.Managers
         private static readonly int _maxShownScreenLogs = 10;
         public static Log DoScreenLog(string message, LogLevel logLevel = LogLevel.Information, int lifeTime = 5000, ShadowSettings shadowSettings = null)
         {
+            if (!EnableScreenLogging)
+                return null;
+
             Vector2 logScreenStartPosition = LogScreenStartPosition;
             Vector2 logScreenPosition = logScreenStartPosition;
 
@@ -99,6 +116,9 @@ namespace BimilEngine.Source.Engine.Managers
 
         public static Log DoConsoleLog(string message, LogLevel logLevel = LogLevel.Information, bool useForegroundColoring = false)
         {
+            if (!EnableConsoleLogging)
+                return null;
+
             DateTime dateTimeNow = DateTime.Now;
 
             switch (logLevel)
@@ -137,6 +157,9 @@ namespace BimilEngine.Source.Engine.Managers
 
         public static Log DoFileLog(string message, LogLevel logLevel = LogLevel.Information)
         {
+            if (!EnableFileLogging)
+                return null;
+
             if (string.IsNullOrEmpty(LogFilePath))
                 throw new Exception("Log file path is not set!");
 

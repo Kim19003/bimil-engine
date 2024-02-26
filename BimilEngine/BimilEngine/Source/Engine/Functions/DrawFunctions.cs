@@ -13,8 +13,8 @@ using BimilEngine.Source.Engine.Other;
 using BimilEngine.Source.GameLogic;
 using IDrawable = BimilEngine.Source.Engine.Interfaces.IDrawable;
 using System;
-using BimilEngine.Source.Engine.Interfaces;
 using BimilEngine.Source.Engine.Models.DrawShapes;
+using BimilEngine.Source.Engine.Interfaces;
 
 namespace BimilEngine.Source.Engine.Functions
 {
@@ -72,7 +72,10 @@ namespace BimilEngine.Source.Engine.Functions
             {
                 if (cameraLevelSprite == null || cameraLevelSprite is not IDrawable) continue;
 
-                ((IDrawable)cameraLevelSprite).Draw(gameTime, interpolationAlpha);
+                AnimationHandler animationHandler = cameraLevelSprite is IAnimatable animatable
+                    ? animatable.AnimationHandler
+                    : null;
+                ((IDrawable)cameraLevelSprite).Draw(gameTime, interpolationAlpha, animationHandler);
             }
 
             // End the sprite batch

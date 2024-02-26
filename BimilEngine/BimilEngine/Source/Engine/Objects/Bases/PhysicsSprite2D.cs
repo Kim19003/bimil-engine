@@ -7,6 +7,9 @@ using IDrawable = BimilEngine.Source.Engine.Interfaces.IDrawable;
 using Genbox.VelcroPhysics.Dynamics;
 using Genbox.VelcroPhysics.Collision.ContactSystem;
 using System.Collections.Generic;
+using BimilEngine.Source.Engine.Handlers;
+using System;
+using BimilEngine.Source.Engine.Managers;
 
 namespace BimilEngine.Source.Engine.Objects.Bases
 {
@@ -74,9 +77,79 @@ namespace BimilEngine.Source.Engine.Objects.Bases
             }
         }
 
-        public virtual void Draw(GameTime gameTime, float interpolationAlpha = 0f)
+        /// <summary>
+        /// Used to store the ongoing texture draws of the animations.
+        /// </summary>
+        private readonly Dictionary<Animation, (Texture2D Texture, TimeSpan DrawTime)?> _ongoingTextureDraws = new();
+        public virtual void Draw(GameTime gameTime, float interpolationAlpha = 0f, AnimationHandler animationHandler = null)
         {
-            if (Texture != null)
+            Animation[] ongoingAnimations = animationHandler != null
+                ? animationHandler.GetOngoingAnimations()
+                : Array.Empty<Animation>();
+
+            if (!ongoingAnimations.Any())
+            {
+                DrawTexture(Texture, interpolationAlpha);
+            }
+            else
+            {
+                /*
+                    Clarification on the animations:
+                    
+                    - The animation is a sequence of textures and their durations.
+                    - The textures are drawn in a (sequential) order, and their durations are the time they are being drawn.
+                    - When the time of a texture's draw has finished, the next texture is drawn.
+                    - When the time of the last texture's draw has finished, the animation is finished.
+                    - The Repeat property of the animation determines if the animation should play again after it has finished.
+                    - Note: We are not drawing the textures frame by frame, but rather in a time-based manner.
+                */
+
+                if (ongoingAnimations.Length > 1)
+                    LogManager.DoConsoleLog("PUA: There are more than one ongoing animations.", LogLevel.Warning);
+
+                TimeSpan totalElapsedTime = gameTime.TotalGameTime;
+
+                foreach (Animation ongoingAnimation in ongoingAnimations)
+                {
+                    for (int i = 0; i < ongoingAnimation.Textures.Count; i++)
+                    {
+                        bool isLastIteration = i == ongoingAnimation.Textures.Count - 1;
+
+                        Texture2D texture = ongoingAnimation.Textures[i].Texture; // The current texture
+                        TimeSpan duration = ongoingAnimation.Textures[i].Duration; // Duration of the current texture
+
+                        if (!_ongoingTextureDraws.ContainsKey(ongoingAnimation)) // If the whole animation is not yet started
+                            _ongoingTextureDraws.Add(ongoingAnimation, (texture, totalElapsedTime)); // Start drawing the current texture
+                        else if (_ongoingTextureDraws[ongoingAnimation] == null) // If the animation's previous texture draw has finished
+                            _ongoingTextureDraws[ongoingAnimation] = (texture, totalElapsedTime); // Start drawing the current texture
+#warning Use class instead of (Texture2D Texture, TimeSpan DrawTime) tuple, as we can't use the reference here!
+                        else if (_ongoingTextureDraws[ongoingAnimation].Value.Texture != texture) // If there is an ongoing texture draw
+                            continue; // Skip drawing the current texture
+
+                        if (totalElapsedTime - _ongoingTextureDraws[ongoingAnimation]?.DrawTime <= duration) // If the current texture draw has not yet finished
+                        {
+                            DrawTexture(texture, 0f); // Draw it [should be implement interpolation for animations?]
+                        }
+                        else // If the current texture draw is finished
+                        {
+                            _ongoingTextureDraws[ongoingAnimation] = null; // Remove the current texture draw from the ongoing draws
+
+                            if (isLastIteration) // If the current texture was the last texture in the animation
+                            {
+                                ongoingAnimation.HasFinished = !ongoingAnimation.Repeat; // Finish the animation, if it's not repeating
+                                ongoingAnimation.IsPlaying = ongoingAnimation.Repeat; // If it's repeating, play it again
+
+                                _ongoingTextureDraws.Remove(ongoingAnimation); // Remove the whole animation from the ongoing draws
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        private void DrawTexture(Texture2D texture, float interpolationAlpha = 0f)
+        {
+            if (texture != null)
             {
                 Vector2 position;
                 float rotation;
@@ -92,9 +165,9 @@ namespace BimilEngine.Source.Engine.Objects.Bases
                     rotation = Rotation;
                 }
 
-                Vector2 origin = new(Texture.Width / 2, Texture.Height / 2);
+                Vector2 origin = new(texture.Width / 2, texture.Height / 2);
 
-                Globals.SpriteBatch.Draw(Texture, position, null, Color.White, rotation, origin, Scale, SpriteEffects, SortingLayer);
+                Globals.SpriteBatch.Draw(texture, position, null, Color.White, rotation, origin, Scale, SpriteEffects, SortingLayer);
             }
         }
 

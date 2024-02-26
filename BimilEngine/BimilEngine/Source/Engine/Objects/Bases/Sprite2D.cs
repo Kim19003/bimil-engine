@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework.Graphics;
 using BimilEngine.Source.Engine.Interfaces;
 using BimilEngine.Source.Engine.Models;
 using IDrawable = BimilEngine.Source.Engine.Interfaces.IDrawable;
+using BimilEngine.Source.Engine.Handlers;
 
 namespace BimilEngine.Source.Engine.Objects.Bases
 {
@@ -45,7 +46,7 @@ namespace BimilEngine.Source.Engine.Objects.Bases
             // TODO: Add your fixed update logic to-be-inherited here
         }
 
-        public virtual void Draw(GameTime gameTime, float interpolationAlpha = 0f)
+        public virtual void Draw(GameTime gameTime, float interpolationAlpha = 0f, AnimationHandler animationHandler = null)
         {
             if (Texture != null)
             {

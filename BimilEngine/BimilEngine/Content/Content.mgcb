@@ -128,6 +128,42 @@
 /processorParam:TextureFormat=Color
 /build:Textures/Pixels/Yellow Pixel.png
 
+#begin Textures/Square Head Idle Gun Looking Left Hands Up.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Textures/Square Head Idle Gun Looking Left Hands Up.png
+
+#begin Textures/Square Head Idle Gun Looking Left.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Textures/Square Head Idle Gun Looking Left.png
+
+#begin Textures/Square Head Idle Gun Looking Right Hands Up.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Textures/Square Head Idle Gun Looking Right Hands Up.png
+
 #begin Textures/Square Head Idle Gun Looking Right.png
 /importer:TextureImporter
 /processor:TextureProcessor

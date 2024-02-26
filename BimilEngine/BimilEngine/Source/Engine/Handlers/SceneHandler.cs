@@ -53,12 +53,12 @@ namespace BimilEngine.Source.Engine.Handlers
             {
                 if (scene.Gadgets.FirstOrDefault(gadget => gadget is Camera2D) is not Camera2D foundCamera)
                 {
-                    LogManager.DoConsoleLog($"Scene '{scene.Name}' does not have any cameras", LogLevel.Warning);
+                    LogManager.DoConsoleLog($"PUA: Scene '{scene.Name}' does not have any cameras!", LogLevel.Warning);
                 }
                 else
                 {
                     scene.AddActiveCamera(foundCamera);
-                    LogManager.DoConsoleLog($"Scene '{scene.Name}' didn't have any active cameras, so we added the first camera found as the active camera");
+                    LogManager.DoConsoleLog($"Scene '{scene.Name}' didn't have any active cameras, so we added the first camera found as the active camera.");
                 }
             }
             

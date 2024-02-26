@@ -15,6 +15,10 @@ using Vector2 = Microsoft.Xna.Framework.Vector2;
 using Genbox.VelcroPhysics.Collision.ContactSystem;
 using BimilEngine.Source.Engine.Interfaces;
 using BimilEngine.Source.Engine.Handlers;
+using BimilEngine.Source.Engine;
+using Microsoft.Xna.Framework.Graphics;
+using System.Collections.Generic;
+using System;
 
 namespace BimilEngine.Source.GameLogic.Sprites
 {
@@ -62,6 +66,23 @@ namespace BimilEngine.Source.GameLogic.Sprites
         {
             // AssociatedScene.AddOrUpdateDebugDraw(new(bodyDrawShape, cameraLevel: Environment2D.ActiveScene.ActiveCameras.First().CameraLevel));
 
+            Dictionary<string, Texture2D> textureBatch = new() // TODO: Move this to Globals, etc?
+            {
+                { "Square Head Idle Gun Looking Left", Globals.Content.Load<Texture2D>("Textures/Square Head Idle Gun Looking Left") },
+                { "Square Head Idle Gun Looking Left Hands Up", Globals.Content.Load<Texture2D>("Textures/Square Head Idle Gun Looking Left Hands Up") },
+            };
+
+            AnimationHandler.AddAnimations(new (string, Animation)[]
+            {
+                ("Left", new(new()
+                {
+                    (TimeSpan.FromSeconds(1), textureBatch["Square Head Idle Gun Looking Left"]),
+                    (TimeSpan.FromSeconds(1), textureBatch["Square Head Idle Gun Looking Left Hands Up"])
+                })),
+            });
+
+            AnimationHandler.PlayAnimation("Left");
+
             // ---------
             base.Start();
         }
@@ -74,7 +95,7 @@ namespace BimilEngine.Source.GameLogic.Sprites
             // }
 
             Camera2D activeCamera = Environment2D.ActiveScene.ActiveCameras.FirstOrDefault();
-            activeCamera.MatrixPosition = Position;
+            // activeCamera.MatrixPosition = Position;
 
             // ---------
             base.Update(gameTime);
@@ -111,11 +132,11 @@ namespace BimilEngine.Source.GameLogic.Sprites
             base.FixedUpdate(gameTime, fixedGameTime);
         }
 
-        public override void Draw(GameTime gameTime, float interpolationAlpha = 0f)
+        public override void Draw(GameTime gameTime, float interpolationAlpha = 0f, AnimationHandler animationHandler = null)
         {
 
             // ---------
-            base.Draw(gameTime, interpolationAlpha);
+            base.Draw(gameTime, interpolationAlpha, animationHandler);
         }
 
         public override void OnCollisionEnter2D(Fixture current, Fixture other, Contact contact)

@@ -6,6 +6,7 @@ using Genbox.VelcroPhysics.Utilities;
 using Microsoft.Xna.Framework;
 using BimilEngine.Source.Engine.Objects;
 using BimilEngine.Source.Engine.Objects.Bases;
+using BimilEngine.Source.Engine.Handlers;
 
 namespace BimilEngine.Source.GameLogic.Sprites
 {
@@ -59,11 +60,11 @@ namespace BimilEngine.Source.GameLogic.Sprites
             base.FixedUpdate(gameTime, fixedGameTime);
         }
 
-        public override void Draw(GameTime gameTime, float interpolationAlpha = 0f)
+        public override void Draw(GameTime gameTime, float interpolationAlpha = 0f, AnimationHandler animationHandler = null)
         {
 
             // ---------
-            base.Draw(gameTime, interpolationAlpha);
+            base.Draw(gameTime, interpolationAlpha, animationHandler);
         }
     }
 }

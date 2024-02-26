@@ -126,9 +126,9 @@ namespace BimilEngine.Source.Engine.Objects
                 throw new System.Exception("Sprite must be associated with this scene");
 
             if (sprite is Sprite2D sprite2D && _sprites.Any(s => s is PhysicsSprite2D))
-                LogManager.DoConsoleLog($"Sprite '{sprite2D.Name}' is a Sprite2D, but there are PhysicsSprite2Ds in the scene. This may cause issues.", LogLevel.Warning);
+                LogManager.DoConsoleLog($"PUA: Sprite '{sprite2D.Name}' is a Sprite2D, but there are PhysicsSprite2Ds in the scene.", LogLevel.Warning);
             else if (sprite is PhysicsSprite2D physicsSprite2D && _sprites.Any(s => s is Sprite2D))
-                LogManager.DoConsoleLog($"Sprite '{physicsSprite2D.Name}' is a PhysicsSprite2D, but there are Sprite2Ds in the scene. This may cause issues.", LogLevel.Warning);
+                LogManager.DoConsoleLog($"PUA: Sprite '{physicsSprite2D.Name}' is a PhysicsSprite2D, but there are Sprite2Ds in the scene.", LogLevel.Warning);
 
             _sprites.Add(sprite);
         }

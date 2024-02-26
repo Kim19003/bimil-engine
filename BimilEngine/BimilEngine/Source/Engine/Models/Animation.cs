@@ -8,10 +8,6 @@ namespace BimilEngine.Source.Engine.Models
     public sealed class Animation : IDisposable
     {
         /// <summary>
-        /// The id of the animation.
-        /// </summary>
-        public string Id { get; set; }
-        /// <summary>
         /// The textures and their durations in the animation.
         /// </summary>
         public List<(TimeSpan Duration, Texture2D Texture)> Textures { get; } = new();
@@ -24,15 +20,28 @@ namespace BimilEngine.Source.Engine.Models
         /// <summary>
         /// Is the animation playing?
         /// </summary>
+        /// <remarks>If HasFinished is true, this should logically be false.</remarks>
         public bool IsPlaying { get; set; } = false;
         /// <summary>
         /// Does the animation repeat?
         /// </summary>
         public bool Repeat { get; set; } = true;
         /// <summary>
-        /// Has the animation finished playing? Use this when the animation is not repeating.
+        /// Has the animation finished playing?
         /// </summary>
+        /// <remarks>If Repeat is true, this should logically be null. Else, if IsPlaying is true, this should logically be false.</remarks>
         public bool? HasFinished { get; set; } = null;
+
+        public Animation()
+        {
+
+        }
+
+        public Animation(List<(TimeSpan Duration, Texture2D Texture)> textures, bool repeat = true)
+        {
+            Textures.AddRange(textures);
+            Repeat = repeat;
+        }
 
         public void Dispose()
         {

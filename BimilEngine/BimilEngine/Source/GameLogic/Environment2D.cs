@@ -70,7 +70,7 @@ namespace BimilEngine.Source.GameLogic
         /// </summary>
         public static void Initialize(GraphicsDevice graphicsDevice)
         {
-            if (_initializeCalled) LogManager.DoConsoleLog("Multiple calls on Initialize()", LogLevel.Warning);
+            if (_initializeCalled) LogManager.DoConsoleLog("Multiple calls on Initialize().", LogLevel.Warning);
 
             // Initialize graphics
             ScreenHandler.Width = DEFAULT_SCREEN_WIDTH;
@@ -101,7 +101,7 @@ namespace BimilEngine.Source.GameLogic
         /// </summary>
         public static void LoadContent(ContentManager contentManager, GraphicsDevice graphicsDevice)
         {
-            if (_loadContentCalled) LogManager.DoConsoleLog("Multiple calls on LoadContent()", LogLevel.Warning);
+            if (_loadContentCalled) LogManager.DoConsoleLog("Multiple calls on LoadContent().", LogLevel.Warning);
 
             // Load Globals' ContentManager and SpriteBatch
             Globals.Content = contentManager;
@@ -122,7 +122,7 @@ namespace BimilEngine.Source.GameLogic
         /// </summary>
         public static void UnloadContent()
         {
-            if (_unloadContentCalled) LogManager.DoConsoleLog("Multiple calls on UnloadContent()", LogLevel.Warning);
+            if (_unloadContentCalled) LogManager.DoConsoleLog("Multiple calls on UnloadContent().", LogLevel.Warning);
 
             AudioHandler.Dispose();
             foreach (object thing in _sceneHandler.Everything.SelectMany(scene => scene.Things))
@@ -194,7 +194,7 @@ namespace BimilEngine.Source.GameLogic
                 Camera2D firstActiveCamera = ActiveScene.ActiveCameras.FirstOrDefault();
                 if (firstActiveCamera == null)
                 {
-                    LogManager.DoConsoleLog("No camera found to draw the grid", LogLevel.Warning);
+                    LogManager.DoConsoleLog("No camera found to draw the grid!", LogLevel.Warning);
                     return;
                 }
 

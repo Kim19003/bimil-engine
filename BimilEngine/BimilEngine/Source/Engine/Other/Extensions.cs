@@ -252,4 +252,17 @@ namespace BimilEngine.Source.Engine.Other
             return (PhysicsSprite2D)fixture?.Body?.UserData;
         }
     }
+
+    public static class Boolean
+    {
+        public static bool IsNullOrTrue(bool? value)
+        {
+            return value == null || value == true;
+        }
+
+        public static bool IsNullOrFalse(bool? value)
+        {
+            return value == null || value == false;
+        }
+    }
 }
