@@ -98,7 +98,7 @@ namespace BimilEngine.Source.Engine.Functions
                     physicsSprite.LastPosition = physicsSprite.Position;
                     physicsSprite.LastRotation = physicsSprite.Rotation;
 
-                    if (physicsSprite.Rigidbody2D.Interpolation == RigidbodyInterpolation2D.Interpolate)
+                    if (physicsSprite.Rigidbody2D.Interpolation == Interpolation2D.Interpolate)
                     {
                         // Interpolate position and rotation
                         Vector2 position = Vector2.Lerp(physicsSprite.LastPosition, physicsSprite.Rigidbody2D.Body.Position, interpolationAlpha);

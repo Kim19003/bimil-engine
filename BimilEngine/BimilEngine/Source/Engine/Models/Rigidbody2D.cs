@@ -4,13 +4,6 @@ using Genbox.VelcroPhysics.Dynamics;
 
 namespace BimilEngine.Source.Engine.Models
 {
-    public enum RigidbodyInterpolation2D
-    {
-        None,
-        Interpolate,
-        // Extrapolate,
-    }
-
     public class Rigidbody2D : IDestroyable
     {
         /// <summary>
@@ -26,14 +19,14 @@ namespace BimilEngine.Source.Engine.Models
         /// <summary>
         /// The interpolation of the rigidbody.
         /// </summary>
-        public RigidbodyInterpolation2D Interpolation { get; set; } = RigidbodyInterpolation2D.None;
+        public Interpolation2D Interpolation { get; set; } = Interpolation2D.None;
         /// <summary>
         /// Is the rigidbody destroyed?
         /// </summary>
         public bool IsDestroyed => _isDestroyed;
         private bool _isDestroyed = false;
 
-        public Rigidbody2D(PhysicsSprite2D parent, Body body, RigidbodyInterpolation2D interpolation = RigidbodyInterpolation2D.None)
+        public Rigidbody2D(PhysicsSprite2D parent, Body body, Interpolation2D interpolation = Interpolation2D.None)
         {
             _parent = parent;
             _body = body;

@@ -39,9 +39,11 @@ namespace BimilEngine
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
 
-            Globals.Graphics.SynchronizeWithVerticalRetrace = false; // Disable Vsync for now. Use ScreenHandler.UseVsync to set it on/off.
-            IsFixedTimeStep = true; // Use fixed time step. This is used for the FPS limiting.
+            IsFixedTimeStep = true; // Use fixed time step. This is used for the FPS limiting. You shouldn't change this.
             TargetElapsedTime = TimeSpan.FromSeconds(UpdateTimeStep); // Set the fixed time step with UpdateTimeStep (basically the FPS).
+
+            // Tip: Use ScreenHandler.UseVsync to control the VSync
+            // Tip: Use ScreenHandler.MaxFramesPerSecond to control the FPS limit
         }
 
         protected override void Initialize()

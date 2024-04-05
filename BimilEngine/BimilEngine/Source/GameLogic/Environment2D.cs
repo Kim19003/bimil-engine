@@ -240,7 +240,7 @@ namespace BimilEngine.Source.GameLogic
 
             main.AddSprites(new object[]
             {
-                new Player("Textures/Square Head Idle Gun Looking Right", textureSize.Multiply(new(0, -2)),
+                new Player("Textures/Square Head Idle Gun Looking Right", textureSize.MultiplyFollowing(new(0, -2)),
                     new(1), new(0.5f, 1.8f), mainCamera.CameraLevel, "Player", SpriteTags.Player),
 
                 // new Wall("Textures/Grass P Mini", textureSize.Multiply(new(0, 0)),
@@ -254,20 +254,20 @@ namespace BimilEngine.Source.GameLogic
                     
                 // new Wall("Textures/Pixels/Black Pixel", new(mainCameraBounds.X, mainCameraBounds.Y + mainCameraBounds.Height - 50), new(mainCameraBounds.Width * 10, 100), mainCamera.CameraLevel, "Floor", SpriteTags.Wall),
             });
-            Vector2 previousPosition = new(0, 0);
-            Random random = new();
-            for (int i = 0; i < 50; i++)
-            {
-                Vector2 newPosition;
-                if (i == 0)
-                    newPosition = new(0, 0);
-                else
-                    newPosition = new Vector2(previousPosition.X + 2, previousPosition.Y - random.Next(-1, 2));
-                Wall wall = new("Textures/Grass P Mini", textureSize.Multiply(newPosition),
-                    new(1), new(1, 1), mainCamera.CameraLevel, $"Wall {i + 1}", SpriteTags.Wall);
-                main.AddSprite(wall);
-                previousPosition = newPosition;
-            }
+            // Vector2 previousPosition = new(0, 0);
+            // Random random = new();
+            // for (int i = 0; i < 50; i++)
+            // {
+            //     Vector2 newPosition;
+            //     if (i == 0)
+            //         newPosition = new(0, 0);
+            //     else
+            //         newPosition = new Vector2(previousPosition.X + 2, previousPosition.Y - random.Next(-1, 2));
+            //     Wall wall = new("Textures/Grass P Mini", textureSize.MultiplyFollowing(newPosition),
+            //         new(1), new(1, 1), mainCamera.CameraLevel, $"Wall {i + 1}", SpriteTags.Wall);
+            //     main.AddSprite(wall);
+            //     previousPosition = newPosition;
+            // }
 
             // Camera2D secondCamera = (Camera2D)main.Gadgets.FirstOrDefault(s => s is Camera2D camera && camera.Name == "Second Camera");
 

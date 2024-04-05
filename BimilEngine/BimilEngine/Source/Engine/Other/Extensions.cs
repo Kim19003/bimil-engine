@@ -209,21 +209,21 @@ namespace BimilEngine.Source.Engine.Other
     public static class Vector2Extensions
     {
         /// <summary>
-        /// Multiplies the vector by the multiplier.
+        /// Multiplies the following vector by the caller vector.
         /// </summary>
-        /// <returns>The vector multiplied by the multiplier (this).</returns>
-        public static Vector2 Multiply(this Vector2 multiplier, Vector2 vector)
+        /// <returns>The following vector multiplied by the caller vector.</returns>
+        public static Vector2 MultiplyFollowing(this Vector2 multiplier, Vector2 following)
         {
-            return new(vector.X * multiplier.X, vector.Y * multiplier.Y);
+            return new(following.X * multiplier.X, following.Y * multiplier.Y);
         }
 
         /// <summary>
-        /// Divides the vector by the divider.
+        /// Divides the following vector by the caller vector.
         /// </summary>
-        /// <returns>The vector divided by the divider (this).</returns>
-        public static Vector2 Divide(this Vector2 divider, Vector2 vector)
+        /// <returns>The following vector divided by the caller vector.</returns>
+        public static Vector2 DivideFollowing(this Vector2 divider, Vector2 following)
         {
-            Vector2 logicalScale = new(vector.X / divider.X, vector.Y / divider.Y);
+            Vector2 logicalScale = new(following.X / divider.X, following.Y / divider.Y);
 
             return logicalScale;
         }

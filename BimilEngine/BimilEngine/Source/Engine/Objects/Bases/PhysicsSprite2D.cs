@@ -37,11 +37,27 @@ namespace BimilEngine.Source.Engine.Objects.Bases
         public Rigidbody2D Rigidbody2D { get; set; } = null;
         
         /// <summary>
-        /// Last position of the transform, used for interpolation. You should not modify this value.
+        /// Draw interpolation of the sprite.
+        /// </summary>
+        public Interpolation2D DrawInterpolation { get; set; } = Interpolation2D.Interpolate;
+        /// <summary>
+        /// Draw interpolation time of the sprite.
+        /// </summary>
+        public float DrawInterpolationTime { get; set; } = 0.05f;
+        /// <summary>
+        /// Last draw time of the sprite, mainly used for draw interpolation. You should not modify this value.
+        /// </summary>
+        public GameTime LastDrawTime { get; set; } = null;
+        /// <summary>
+        /// Last position of the transform, mainly used for position interpolation. You should not modify this value.
         /// </summary>
         public Vector2 LastPosition { get; set; } = Vector2.Zero;
         /// <summary>
-        /// Last rotation of the transform, used for interpolation. You should not modify this value.
+        /// Last draw position of the transform, mainly used for draw interpolation. You should not modify this value.
+        /// </summary>
+        public Vector2 LastDrawPosition { get; set; } = Vector2.Zero;
+        /// <summary>
+        /// Last rotation of the transform, mainly used for rotation interpolation. You should not modify this value.
         /// </summary>
         public float LastRotation { get; set; } = 0f;
 
@@ -89,7 +105,7 @@ namespace BimilEngine.Source.Engine.Objects.Bases
 
             if (!ongoingAnimations.Any())
             {
-                DrawTexture(Texture, interpolationAlpha);
+                DrawTexture(Texture, gameTime, DrawInterpolation);
             }
             else
             {
@@ -126,7 +142,7 @@ namespace BimilEngine.Source.Engine.Objects.Bases
                         else if (_ongoingTextureDraws[ongoingAnimation].Value.Texture != texture) // If there is an ongoing texture draw
                             continue; // Skip drawing the current texture
 
-                        DrawTexture(texture, 0f); // Draw it [should be implement interpolation for animations?]
+                        DrawTexture(texture, gameTime, DrawInterpolation); // Draw it
 
                         if (totalElapsedTime - _ongoingTextureDraws[ongoingAnimation]?.DrawTime <= duration) // If the current texture draw has not yet finished
                         {
@@ -149,16 +165,20 @@ namespace BimilEngine.Source.Engine.Objects.Bases
             }
         }
 
-        private void DrawTexture(Texture2D texture, float interpolationAlpha = 0f)
+        private void DrawTexture(Texture2D texture, GameTime gameTime, Interpolation2D interpolation)
         {
             if (texture != null)
             {
                 Vector2 position;
                 float rotation;
-                if (Rigidbody2D.Interpolation == RigidbodyInterpolation2D.Interpolate)
+                if (interpolation == Interpolation2D.Interpolate)
                 {
+                    float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
+                    float f = deltaTime / DrawInterpolationTime;
+                    float interpolationAlpha = MathHelper.Clamp(deltaTime / DrawInterpolationTime, 0.0f, 1.0f);
+
                     // Interpolate position and rotation
-                    position = Vector2.Lerp(LastPosition, Position, interpolationAlpha);
+                    position = Vector2.Lerp(LastDrawPosition, Position, interpolationAlpha);
                     rotation = MathHelper.Lerp(LastRotation, Rotation, interpolationAlpha);
                 }
                 else
@@ -170,6 +190,9 @@ namespace BimilEngine.Source.Engine.Objects.Bases
                 Vector2 origin = new(texture.Width / 2, texture.Height / 2);
 
                 Globals.SpriteBatch.Draw(texture, position, null, Color.White, rotation, origin, Scale, SpriteEffects, SortingLayer);
+
+                LastDrawPosition = position;
+                LastDrawTime = gameTime;
             }
         }
 

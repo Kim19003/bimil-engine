@@ -99,19 +99,19 @@ namespace BimilEngine.Source.GameLogic.Gadgets
             
             if (keyboardState.IsKeyDown(Keys.A))
             {
-                activeCamera.MatrixPosition -= new Vector2(0.1f, 0) * deltaTime * 100;
+                activeCamera.MatrixPosition -= new Vector2(0.1f, 0) * deltaTime * 1000;
             }
             if (keyboardState.IsKeyDown(Keys.D))
             {
-                activeCamera.MatrixPosition += new Vector2(0.1f, 0) * deltaTime * 100;
+                activeCamera.MatrixPosition += new Vector2(0.1f, 0) * deltaTime * 1000;
             }
             if (keyboardState.IsKeyDown(Keys.W))
             {
-                activeCamera.MatrixPosition -= new Vector2(0, 0.1f) * deltaTime * 100;
+                activeCamera.MatrixPosition -= new Vector2(0, 0.1f) * deltaTime * 1000;
             }
             if (keyboardState.IsKeyDown(Keys.S))
             {
-                activeCamera.MatrixPosition += new Vector2(0, 0.1f) * deltaTime * 100;
+                activeCamera.MatrixPosition += new Vector2(0, 0.1f) * deltaTime * 1000;
             }
 
             // ---------

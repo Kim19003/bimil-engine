@@ -81,7 +81,7 @@ namespace BimilEngine.Source.GameLogic.Sprites
                 })),
             });
 
-            AnimationHandler.PlayAnimation("Left");
+            // AnimationHandler.PlayAnimation("Left");
 
             // ---------
             base.Start();
@@ -95,7 +95,7 @@ namespace BimilEngine.Source.GameLogic.Sprites
             // }
 
             Camera2D activeCamera = Environment2D.ActiveScene.ActiveCameras.FirstOrDefault();
-            // activeCamera.MatrixPosition = Position;
+            activeCamera.MatrixPosition = Position;
 
             // ---------
             base.Update(gameTime);
@@ -134,7 +134,6 @@ namespace BimilEngine.Source.GameLogic.Sprites
 
         public override void Draw(GameTime gameTime, float interpolationAlpha = 0f, AnimationHandler animationHandler = null)
         {
-
             // ---------
             base.Draw(gameTime, interpolationAlpha, animationHandler);
         }
