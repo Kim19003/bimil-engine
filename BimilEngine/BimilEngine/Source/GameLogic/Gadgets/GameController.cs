@@ -27,6 +27,8 @@ namespace BimilEngine.Source.GameLogic.Gadgets
         Log log1 = null, log2 = null;
         public override void Update(GameTime gameTime)
         {
+            float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
+
             KeyboardState keyboardState = Keyboard.GetState();
             Camera2D activeCamera = Environment2D.ActiveScene.ActiveCameras.FirstOrDefault();
 
@@ -97,19 +99,19 @@ namespace BimilEngine.Source.GameLogic.Gadgets
             
             if (keyboardState.IsKeyDown(Keys.A))
             {
-                activeCamera.MatrixPosition -= new Vector2(0.1f, 0);
+                activeCamera.MatrixPosition -= new Vector2(0.1f, 0) * deltaTime * 100;
             }
             if (keyboardState.IsKeyDown(Keys.D))
             {
-                activeCamera.MatrixPosition += new Vector2(0.1f, 0);
+                activeCamera.MatrixPosition += new Vector2(0.1f, 0) * deltaTime * 100;
             }
             if (keyboardState.IsKeyDown(Keys.W))
             {
-                activeCamera.MatrixPosition -= new Vector2(0, 0.1f);
+                activeCamera.MatrixPosition -= new Vector2(0, 0.1f) * deltaTime * 100;
             }
             if (keyboardState.IsKeyDown(Keys.S))
             {
-                activeCamera.MatrixPosition += new Vector2(0, 0.1f);
+                activeCamera.MatrixPosition += new Vector2(0, 0.1f) * deltaTime * 100;
             }
 
             // ---------

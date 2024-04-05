@@ -126,9 +126,11 @@ namespace BimilEngine.Source.Engine.Objects.Bases
                         else if (_ongoingTextureDraws[ongoingAnimation].Value.Texture != texture) // If there is an ongoing texture draw
                             continue; // Skip drawing the current texture
 
+                        DrawTexture(texture, 0f); // Draw it [should be implement interpolation for animations?]
+
                         if (totalElapsedTime - _ongoingTextureDraws[ongoingAnimation]?.DrawTime <= duration) // If the current texture draw has not yet finished
                         {
-                            DrawTexture(texture, 0f); // Draw it [should be implement interpolation for animations?]
+                            // Do nothing
                         }
                         else // If the current texture draw is finished
                         {
