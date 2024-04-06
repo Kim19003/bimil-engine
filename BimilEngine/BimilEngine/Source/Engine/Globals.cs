@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using BimilEngine.Source.Engine.Managers;
 using BimilEngine.Source.Engine.Models;
+using System.Collections.Generic;
 
 namespace BimilEngine.Source.Engine
 {
@@ -20,6 +21,7 @@ namespace BimilEngine.Source.Engine
             }
         }
         private static GraphicsDeviceManager _graphics = null;
+        
         public static ContentManager Content
         {
             get => _content;
@@ -32,6 +34,7 @@ namespace BimilEngine.Source.Engine
             }
         }
         private static ContentManager _content = null;
+
         public static SpriteBatch SpriteBatch
         {
             get => _spriteBatch;
@@ -44,6 +47,20 @@ namespace BimilEngine.Source.Engine
             }
         }
         private static SpriteBatch _spriteBatch = null;
+
+        public static Dictionary<string, Texture2D> TextureBatch
+        {
+            get => _textureBatch;
+            set
+            {
+                if (_textureBatch == null)
+                    _textureBatch = value;
+                else
+                    LogManager.DoConsoleLog("TextureBatch already set!", LogLevel.Error);
+            }
+        }
+        private static Dictionary<string, Texture2D> _textureBatch = null;
+
         public static Texture2D PixelTexture
         {
             get => _pixelTexture;
@@ -56,6 +73,7 @@ namespace BimilEngine.Source.Engine
             }
         }
         private static Texture2D _pixelTexture = null;
+
         public static Texture2D TransparentTexture
         {
             get => _transparentTexture;

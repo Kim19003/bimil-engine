@@ -20,7 +20,7 @@ namespace BimilEngine.Source.Engine.Functions
 {
     public static class DrawFunctions
     {
-        public static void DrawSprites(SceneHandler sceneHandler, GameTime gameTime, float interpolationAlpha = 0f)
+        public static void DrawSprites(SceneHandler sceneHandler, GameTime gameTime)
         {
             // Get the sprites from the active scene
             IReadOnlyCollection<object> sprites = sceneHandler.ActiveScene.Sprites;
@@ -29,17 +29,17 @@ namespace BimilEngine.Source.Engine.Functions
 
             foreach (Camera2D activeCamera in sceneHandler.ActiveScene.ActiveCameras.OrderByDescending(c => c.CameraLevel))
             {
-                HandleSprites(sprites, activeCamera, gameTime, interpolationAlpha);
+                HandleSprites(sprites, activeCamera, gameTime);
             }
 
             if (sceneHandler.ActiveScene.ActiveCameras.Any())
                 Globals.Graphics.GraphicsDevice.Viewport = Environment2D.ScreenHandler.Viewport;
 
             // Handle the screen level sprites
-            HandleSprites(sprites, null, gameTime, interpolationAlpha);
+            HandleSprites(sprites, null, gameTime);
         }
 
-        private static void HandleSprites(IReadOnlyCollection<object> sprites, Camera2D drawCamera, GameTime gameTime, float interpolationAlpha = 0f)
+        private static void HandleSprites(IReadOnlyCollection<object> sprites, Camera2D drawCamera, GameTime gameTime)
         {
             HashSet<object> cameraLevelSprites = sprites
                 .Where(s => ((Transform2D)s).CameraLevel == (drawCamera == null ? -1 : drawCamera.CameraLevel))
@@ -75,7 +75,7 @@ namespace BimilEngine.Source.Engine.Functions
                 AnimationHandler animationHandler = cameraLevelSprite is IAnimatable animatable
                     ? animatable.AnimationHandler
                     : null;
-                ((IDrawable)cameraLevelSprite).Draw(gameTime, interpolationAlpha, animationHandler);
+                ((IDrawable)cameraLevelSprite).Draw(gameTime, animationHandler);
             }
 
             // End the sprite batch

@@ -64,7 +64,6 @@ namespace BimilEngine
             Environment2D.UnloadContent();
         }
 
-        float interpolationAlpha = 0f;
         float elapsedTimeForFixedUpdate = 0f;
         protected override void Update(GameTime gameTime)
         {
@@ -85,6 +84,7 @@ namespace BimilEngine
                 // Calculate the time between every frame update
                 TimeSpan correctedElapsedGameTime = new((long)(gameTime.ElapsedGameTime.Ticks * (FixedUpdateTimeStep / deltaTime)));
                 GameTime correctedGameTime = new(gameTime.TotalGameTime, correctedElapsedGameTime);
+                
                 // Calculate the time between every fixedupdate call (use elapsedTimeForFixedUpdate)
                 TimeSpan fixedElapsedGameTime = new((long)(elapsedTimeForFixedUpdate * TimeSpan.TicksPerSecond));
                 GameTime fixedGameTime = new(gameTime.TotalGameTime, fixedElapsedGameTime);
@@ -92,8 +92,6 @@ namespace BimilEngine
                 Environment2D.FixedUpdate(correctedGameTime, fixedGameTime);
                 elapsedTimeForFixedUpdate -= FixedUpdateTimeStep;
             }
-
-            interpolationAlpha = MathHelper.Clamp(elapsedTimeForFixedUpdate / FixedUpdateTimeStep, 0.0f, 1.0f);
 
             Environment2D.Update(gameTime);
 
@@ -113,11 +111,8 @@ namespace BimilEngine
             }
 
             GraphicsDevice.Clear(new Color(202, 228, 229, 255));
-
-#warning interpolationAlpha might be calculated incorrectly, use it with caution!
-            // float interpolationAlpha = MathHelper.Clamp(elapsedTimeForFixedUpdate / FixedUpdateTimeStep, 0.0f, 1.0f);
             
-            Environment2D.Draw(gameTime, interpolationAlpha);
+            Environment2D.Draw(gameTime);
 
             // ---------
             base.Draw(gameTime);

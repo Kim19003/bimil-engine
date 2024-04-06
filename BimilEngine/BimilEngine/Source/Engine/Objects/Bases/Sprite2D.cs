@@ -23,11 +23,11 @@ namespace BimilEngine.Source.Engine.Objects.Bases
         /// </summary>
         public float SortingLayer { get; set; } = 0f;
 
-        public Sprite2D(string texturePath, Vector2 position, Vector2 scale, int cameraLevel = 0, string name = "", string tag = "", Scene2D associatedScene = null)
+        public Sprite2D(string textureName, Vector2 position, Vector2 scale, int cameraLevel = 0, string name = "", string tag = "", Scene2D associatedScene = null)
             : base(position, scale, cameraLevel, name, tag, associatedScene)
         {
-            Texture = !string.IsNullOrEmpty(texturePath)
-                ? Globals.Content.Load<Texture2D>(texturePath)
+            Texture = !string.IsNullOrEmpty(textureName)
+                ? Globals.TextureBatch[textureName]
                 : Globals.TransparentTexture;
         }
 
@@ -46,7 +46,7 @@ namespace BimilEngine.Source.Engine.Objects.Bases
             // TODO: Add your fixed update logic to-be-inherited here
         }
 
-        public virtual void Draw(GameTime gameTime, float interpolationAlpha = 0f, AnimationHandler animationHandler = null)
+        public virtual void Draw(GameTime gameTime, AnimationHandler animationHandler = null)
         {
             if (Texture != null)
             {

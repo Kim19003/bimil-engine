@@ -110,6 +110,18 @@ namespace BimilEngine.Source.GameLogic
             // Load Globals' SpriteFonts
             Globals.LogFont = Globals.Content.Load<SpriteFont>("Fonts/LogFont");
 
+            // Load textures
+            Globals.TextureBatch = new()
+            {
+                { "Square Head Idle Gun Looking Right", Globals.Content.Load<Texture2D>("Textures/Square Head Idle Gun Looking Right") },
+                { "Square Head Idle Gun Looking Right Hands Up", Globals.Content.Load<Texture2D>("Textures/Square Head Idle Gun Looking Right Hands Up") },
+                { "Square Head Idle Gun Looking Left", Globals.Content.Load<Texture2D>("Textures/Square Head Idle Gun Looking Left") },
+                { "Square Head Idle Gun Looking Left Hands Up", Globals.Content.Load<Texture2D>("Textures/Square Head Idle Gun Looking Left Hands Up") },
+                { "Grass P Mini", Globals.Content.Load<Texture2D>("Textures/Grass P Mini") },
+                { "Lava Middle", Globals.Content.Load<Texture2D>("Textures/Lava Middle") },
+                { "Wall Middle", Globals.Content.Load<Texture2D>("Textures/Wall Middle") },
+            };
+
             // Load the starting scene
             LoadScene("Main");
 
@@ -173,12 +185,12 @@ namespace BimilEngine.Source.GameLogic
         /// <summary>
         /// Main Draw function. This function is called in the Game1.cs Draw() function.
         /// </summary>
-        public static void Draw(GameTime gameTime, float interpolationAlpha = 0f)
+        public static void Draw(GameTime gameTime)
         {
             double fps = 1 / gameTime.ElapsedGameTime.TotalSeconds;
             ScreenHandler.UpdateFramesPerSecond(fps);
 
-            DrawFunctions.DrawSprites(_sceneHandler, gameTime, interpolationAlpha);
+            DrawFunctions.DrawSprites(_sceneHandler, gameTime);
             DrawFunctions.DrawDebugs(_sceneHandler, gameTime);
 
             if (GridSettings.Enabled)
@@ -240,34 +252,35 @@ namespace BimilEngine.Source.GameLogic
 
             main.AddSprites(new object[]
             {
-                new Player("Textures/Square Head Idle Gun Looking Right", textureSize.MultiplyFollowing(new(0, -2)),
+                new Player("Square Head Idle Gun Looking Right", textureSize.MultiplyFollowing(new(0, -2)),
                     new(1), new(0.5f, 1.8f), mainCamera.CameraLevel, "Player", SpriteTags.Player),
 
-                // new Wall("Textures/Grass P Mini", textureSize.Multiply(new(0, 0)),
+                // new Wall("Grass P Mini", textureSize.Multiply(new(0, 0)),
                 //     new(1), new(1, 1), mainCamera.CameraLevel, "Wall 3", SpriteTags.Wall),
 
-                // new Wall("Textures/Grass P Mini", textureSize.Multiply(new(-2, 0)),
+                // new Wall("Grass P Mini", textureSize.Multiply(new(-2, 0)),
                 //     new(1), new(1, 1), mainCamera.CameraLevel, "Wall 4", SpriteTags.Wall),
 
-                // new Wall("Textures/Grass P Mini", textureSize.Multiply(new(2, 0)),
+                // new Wall("Grass P Mini", textureSize.Multiply(new(2, 0)),
                 //     new(1), new(1, 1), mainCamera.CameraLevel, "Wall 5", SpriteTags.Wall),
                     
-                // new Wall("Textures/Pixels/Black Pixel", new(mainCameraBounds.X, mainCameraBounds.Y + mainCameraBounds.Height - 50), new(mainCameraBounds.Width * 10, 100), mainCamera.CameraLevel, "Floor", SpriteTags.Wall),
+                // new Wall("Pixels/Black Pixel", new(mainCameraBounds.X, mainCameraBounds.Y + mainCameraBounds.Height - 50), new(mainCameraBounds.Width * 10, 100), mainCamera.CameraLevel, "Floor", SpriteTags.Wall),
             });
-            // Vector2 previousPosition = new(0, 0);
-            // Random random = new();
-            // for (int i = 0; i < 50; i++)
-            // {
-            //     Vector2 newPosition;
-            //     if (i == 0)
-            //         newPosition = new(0, 0);
-            //     else
-            //         newPosition = new Vector2(previousPosition.X + 2, previousPosition.Y - random.Next(-1, 2));
-            //     Wall wall = new("Textures/Grass P Mini", textureSize.MultiplyFollowing(newPosition),
-            //         new(1), new(1, 1), mainCamera.CameraLevel, $"Wall {i + 1}", SpriteTags.Wall);
-            //     main.AddSprite(wall);
-            //     previousPosition = newPosition;
-            // }
+
+            Vector2 previousPosition = new(0, 0);
+            Random random = new();
+            for (int i = 0; i < 50; i++)
+            {
+                Vector2 newPosition;
+                if (i == 0)
+                    newPosition = new(0, 0);
+                else
+                    newPosition = new Vector2(previousPosition.X + 2, previousPosition.Y - random.Next(-1, 2));
+                Wall wall = new("Grass P Mini", textureSize.MultiplyFollowing(newPosition),
+                    new(1), new(1, 1), mainCamera.CameraLevel, $"Wall {i + 1}", SpriteTags.Wall);
+                main.AddSprite(wall);
+                previousPosition = newPosition;
+            }
 
             // Camera2D secondCamera = (Camera2D)main.Gadgets.FirstOrDefault(s => s is Camera2D camera && camera.Name == "Second Camera");
 
@@ -296,8 +309,8 @@ namespace BimilEngine.Source.GameLogic
             // });
             // second.AddSprites(new object[]
             // {
-            //     new Player("Textures/Lava Middle", new(300, DefaultScreenHeight - 250), new(100, 100), "Player", SpriteTags.Player),
-            //     new Wall("Textures/Wall Middle", new(600, DefaultScreenHeight - 600), new(100, 400), "Wall", SpriteTags.Wall),
+            //     new Player("Lava Middle", new(300, DefaultScreenHeight - 250), new(100, 100), "Player", SpriteTags.Player),
+            //     new Wall("Wall Middle", new(600, DefaultScreenHeight - 600), new(100, 400), "Wall", SpriteTags.Wall),
             // });
 
             // Add the scenes to the environment

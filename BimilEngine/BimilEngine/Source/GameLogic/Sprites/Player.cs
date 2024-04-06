@@ -19,20 +19,21 @@ using BimilEngine.Source.Engine;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
 using System;
+using BimilEngine.Source.GameLogic.Models;
 
 namespace BimilEngine.Source.GameLogic.Sprites
 {
     public class Player : PhysicsSprite2D, IAnimatable
     {
         public float MovementSpeed { get; set; } = 160f;
-        public float JumpPower { get; set; } = 200f;
+        public float JumpPower { get; set; } = 300f;
 
         public bool IsGrounded { get; private set; }
 
         public AnimationHandler AnimationHandler { get; set; } = new();
 
-        public Player(string texturePath, Vector2 position, Vector2 scale, Vector2 physicsScale, int cameraLevel = 0, string name = "", string tag = "",
-            Scene2D associatedScene = null) : base(texturePath, position, scale, physicsScale, cameraLevel, name, tag, associatedScene)
+        public Player(string textureName, Vector2 position, Vector2 scale, Vector2 physicsScale, int cameraLevel = 0, string name = "", string tag = "",
+            Scene2D associatedScene = null) : base(textureName, position, scale, physicsScale, cameraLevel, name, tag, associatedScene)
         {
             Rigidbody2D = new(this, Environment2D.PhysicsWorld.CreateBody(new()
                 {
@@ -53,7 +54,7 @@ namespace BimilEngine.Source.GameLogic.Sprites
             // Rigidbody2D.Body.Mass = 60f; // Use this to set the mass
             Rigidbody2D.Body.IsBullet = true; // Use this to make the body a bullet (enable CCD)
             Rigidbody2D.Body.FixedRotation = true; // Use this to make the body not rotate
-            // Rigidbody2D.Body.AngularVelocity = 0.1f; // Use this to set the angular (rotation) velocity
+            // Rigidbody2D.Body.AngularVelocity = 0.5f; // Use this to set the angular (rotation) velocity
 
             // Body.IsSensor = true; // Use this to make the body a trigger
 
@@ -66,22 +67,25 @@ namespace BimilEngine.Source.GameLogic.Sprites
         {
             // AssociatedScene.AddOrUpdateDebugDraw(new(bodyDrawShape, cameraLevel: Environment2D.ActiveScene.ActiveCameras.First().CameraLevel));
 
-            Dictionary<string, Texture2D> textureBatch = new() // TODO: Move this to Globals, etc?
-            {
-                { "Square Head Idle Gun Looking Left", Globals.Content.Load<Texture2D>("Textures/Square Head Idle Gun Looking Left") },
-                { "Square Head Idle Gun Looking Left Hands Up", Globals.Content.Load<Texture2D>("Textures/Square Head Idle Gun Looking Left Hands Up") },
-            };
-
             AnimationHandler.AddAnimations(new (string, Animation)[]
             {
                 ("Left", new(new()
                 {
-                    (TimeSpan.FromSeconds(1), textureBatch["Square Head Idle Gun Looking Left"]),
-                    (TimeSpan.FromSeconds(1), textureBatch["Square Head Idle Gun Looking Left Hands Up"])
+                    (TimeSpan.FromSeconds(1), Globals.TextureBatch["Square Head Idle Gun Looking Left"]),
+                })),
+                ("Left Up", new(new()
+                {
+                    (TimeSpan.FromSeconds(1), Globals.TextureBatch["Square Head Idle Gun Looking Left Hands Up"]),
+                })),
+                ("Right", new(new()
+                {
+                    (TimeSpan.FromSeconds(1), Globals.TextureBatch["Square Head Idle Gun Looking Right"]),
+                })),
+                ("Right Up", new(new()
+                {
+                    (TimeSpan.FromSeconds(1), Globals.TextureBatch["Square Head Idle Gun Looking Right Hands Up"]),
                 })),
             });
-
-            // AnimationHandler.PlayAnimation("Left");
 
             // ---------
             base.Start();
@@ -94,13 +98,21 @@ namespace BimilEngine.Source.GameLogic.Sprites
             //     bodyDrawShape.Body = new(bodyDrawShape.Body.X, bodyDrawShape.Body.Y - 1, bodyDrawShape.Body.Width, bodyDrawShape.Body.Height);
             // }
 
-            Camera2D activeCamera = Environment2D.ActiveScene.ActiveCameras.FirstOrDefault();
-            activeCamera.MatrixPosition = Position;
+            // ! This is not working correctly when the FPS is over the PHYSICS_HERTZ
+            // if (LastDrawTime != null)
+            // {
+            //     Camera2D activeCamera = Environment2D.ActiveScene.ActiveCameras.FirstOrDefault();
+            //     float lastDeltaTime = (float)LastDrawTime.ElapsedGameTime.TotalSeconds;
+            //     float interpolationAlpha = MathHelper.Clamp(lastDeltaTime / DrawInterpolationTime, 0.0f, 1.0f);
+            //     activeCamera.MatrixPosition = Vector2.Lerp(LastDrawPosition, Position, interpolationAlpha);
+            // }
 
             // ---------
             base.Update(gameTime);
         }
 
+        Vector2 _moveDirection = Vector2.Zero;
+        bool _isJumping = false;
         public override void FixedUpdate(GameTime gameTime, GameTime fixedGameTime)
         {
             float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
@@ -119,36 +131,67 @@ namespace BimilEngine.Source.GameLogic.Sprites
             //     MovementSpeed = 10f;
 
             if (isKeyDownLeft) // Moving left
+            {
                 Rigidbody2D.Body.LinearVelocity = new Vector2(-MovementSpeed * 100 * deltaTime, Rigidbody2D.Body.LinearVelocity.Y);
+                _moveDirection = Vector2Direction.Left;
+                if (_isJumping)
+                    AnimationHandler.PlayAnimation("Left Up");
+                else
+                    AnimationHandler.PlayAnimation("Left");
+            }
             else if (isKeyDownRight) // Moving right
+            {
                 Rigidbody2D.Body.LinearVelocity = new Vector2(MovementSpeed * 100 * deltaTime, Rigidbody2D.Body.LinearVelocity.Y);
+                _moveDirection = Vector2Direction.Right;
+                if (_isJumping)
+                    AnimationHandler.PlayAnimation("Right Up");
+                else
+                    AnimationHandler.PlayAnimation("Right");
+            }
             else // Not moving left or right
+            {
                 Rigidbody2D.Body.LinearVelocity = new Vector2(0, Rigidbody2D.Body.LinearVelocity.Y);
+                if (_isJumping)
+                {
+                    if (_moveDirection == Vector2Direction.Left)
+                        AnimationHandler.PlayAnimation("Left Up");
+                    else if (_moveDirection == Vector2Direction.Right)
+                        AnimationHandler.PlayAnimation("Right Up");
+                }
+                else
+                {
+                    if (_moveDirection == Vector2Direction.Left)
+                        AnimationHandler.PlayAnimation("Left");
+                    else if (_moveDirection == Vector2Direction.Right)
+                        AnimationHandler.PlayAnimation("Right");
+                }
+            }
 
             if (isKeyPressedUp) // Jumping
+            {
                 Rigidbody2D.Body.LinearVelocity = new Vector2(Rigidbody2D.Body.LinearVelocity.X, -JumpPower);
+                _isJumping = true;
+            }
 
             // ---------
             base.FixedUpdate(gameTime, fixedGameTime);
         }
 
-        public override void Draw(GameTime gameTime, float interpolationAlpha = 0f, AnimationHandler animationHandler = null)
+        public override void Draw(GameTime gameTime, AnimationHandler animationHandler = null)
         {
             // ---------
-            base.Draw(gameTime, interpolationAlpha, animationHandler);
+            base.Draw(gameTime, animationHandler);
         }
 
         public override void OnCollisionEnter2D(Fixture current, Fixture other, Contact contact)
         {
             LogManager.DoConsoleLog($"Collision Enter", LogLevel.Debug);
 
-            // PhysicsSprite2D otherSprite = other.GetParent();
-            // if (((Sprite2D)collision.OtherCollider.AssociatedGameObject).Tag == SpriteTags.Wall)
-            // {
-                
-
-            //     // HandleCollisionBounce(collision.CollisionDirection, MovementSpeed);
-            // }
+            PhysicsSprite2D otherSprite = other.GetParent();
+            if (otherSprite.Tag == SpriteTags.Wall)
+            {
+                _isJumping = false;
+            }
         }
 
         public override void OnCollisionStay2D(Fixture current, Fixture other, Contact contact)

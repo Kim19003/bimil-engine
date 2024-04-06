@@ -12,8 +12,8 @@ namespace BimilEngine.Source.GameLogic.Sprites
 {
     public class Wall : PhysicsSprite2D
     {
-        public Wall(string texturePath, Vector2 position, Vector2 scale, Vector2 physicsScale, int cameraLevel = 0, string name = "", string tag = "",
-            Scene2D associatedScene = null) : base(texturePath, position, scale, physicsScale, cameraLevel, name, tag, associatedScene)
+        public Wall(string textureName, Vector2 position, Vector2 scale, Vector2 physicsScale, int cameraLevel = 0, string name = "", string tag = "",
+            Scene2D associatedScene = null) : base(textureName, position, scale, physicsScale, cameraLevel, name, tag, associatedScene)
         {
             Rigidbody2D = new(this, Environment2D.PhysicsWorld.CreateBody(new()
                 {
@@ -60,11 +60,11 @@ namespace BimilEngine.Source.GameLogic.Sprites
             base.FixedUpdate(gameTime, fixedGameTime);
         }
 
-        public override void Draw(GameTime gameTime, float interpolationAlpha = 0f, AnimationHandler animationHandler = null)
+        public override void Draw(GameTime gameTime, AnimationHandler animationHandler = null)
         {
 
             // ---------
-            base.Draw(gameTime, interpolationAlpha, animationHandler);
+            base.Draw(gameTime, animationHandler);
         }
     }
 }

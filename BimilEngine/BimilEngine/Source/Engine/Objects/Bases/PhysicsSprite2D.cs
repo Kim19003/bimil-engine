@@ -43,7 +43,7 @@ namespace BimilEngine.Source.Engine.Objects.Bases
         /// <summary>
         /// Draw interpolation time of the sprite.
         /// </summary>
-        public float DrawInterpolationTime { get; set; } = 0.05f;
+        public float DrawInterpolationTime { get; set; } = 0.03f;
         /// <summary>
         /// Last draw time of the sprite, mainly used for draw interpolation. You should not modify this value.
         /// </summary>
@@ -60,14 +60,18 @@ namespace BimilEngine.Source.Engine.Objects.Bases
         /// Last rotation of the transform, mainly used for rotation interpolation. You should not modify this value.
         /// </summary>
         public float LastRotation { get; set; } = 0f;
+        /// <summary>
+        /// Last draw rotation of the transform, mainly used for draw interpolation. You should not modify this value.
+        /// </summary>
+        public float LastDrawRotation { get; set; } = 0f;
 
         private readonly HashSet<(Fixture, Fixture, Contact)> _activeCollisions = new();
 
-        public PhysicsSprite2D(string texturePath, Vector2 position, Vector2 scale, Vector2 physicsScale, int cameraLevel = 0, string name = "", string tag = "",
+        public PhysicsSprite2D(string textureName, Vector2 position, Vector2 scale, Vector2 physicsScale, int cameraLevel = 0, string name = "", string tag = "",
             Scene2D associatedScene = null) : base(position, scale, cameraLevel, name, tag, associatedScene)
         {
-            Texture = !string.IsNullOrEmpty(texturePath)
-                ? Globals.Content.Load<Texture2D>(texturePath)
+            Texture = !string.IsNullOrEmpty(textureName)
+                ? Globals.TextureBatch[textureName]
                 : Globals.TransparentTexture;
             PhysicsScale = physicsScale;
         }
@@ -97,7 +101,7 @@ namespace BimilEngine.Source.Engine.Objects.Bases
         /// Used to store the ongoing texture draws of the animations.
         /// </summary>
         private readonly Dictionary<Animation, (Texture2D Texture, TimeSpan DrawTime)?> _ongoingTextureDraws = new();
-        public virtual void Draw(GameTime gameTime, float interpolationAlpha = 0f, AnimationHandler animationHandler = null)
+        public virtual void Draw(GameTime gameTime, AnimationHandler animationHandler = null)
         {
             Animation[] ongoingAnimations = animationHandler != null
                 ? animationHandler.GetOngoingAnimations()
@@ -174,12 +178,11 @@ namespace BimilEngine.Source.Engine.Objects.Bases
                 if (interpolation == Interpolation2D.Interpolate)
                 {
                     float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
-                    float f = deltaTime / DrawInterpolationTime;
                     float interpolationAlpha = MathHelper.Clamp(deltaTime / DrawInterpolationTime, 0.0f, 1.0f);
 
                     // Interpolate position and rotation
                     position = Vector2.Lerp(LastDrawPosition, Position, interpolationAlpha);
-                    rotation = MathHelper.Lerp(LastRotation, Rotation, interpolationAlpha);
+                    rotation = MathHelper.Lerp(LastDrawRotation, Rotation, interpolationAlpha);
                 }
                 else
                 {
@@ -192,6 +195,7 @@ namespace BimilEngine.Source.Engine.Objects.Bases
                 Globals.SpriteBatch.Draw(texture, position, null, Color.White, rotation, origin, Scale, SpriteEffects, SortingLayer);
 
                 LastDrawPosition = position;
+                LastDrawRotation = rotation;
                 LastDrawTime = gameTime;
             }
         }
