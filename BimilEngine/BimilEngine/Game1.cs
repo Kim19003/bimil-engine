@@ -98,7 +98,7 @@ namespace BimilEngine
                 elapsedTimeForFixedUpdate -= FixedUpdateTimeStep;
             }
 
-            InterpolationAlpha = elapsedTimeForFixedUpdate / FixedUpdateTimeStep;
+            InterpolationAlpha = MathHelper.Clamp(elapsedTimeForFixedUpdate / FixedUpdateTimeStep, 0f, 1f);
 
             Environment2D.Update(gameTime);
 
