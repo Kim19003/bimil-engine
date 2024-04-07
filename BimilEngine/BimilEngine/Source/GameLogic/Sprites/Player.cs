@@ -18,6 +18,8 @@ using BimilEngine.Source.Engine;
 using System;
 using BimilEngine.Source.GameLogic.Models;
 using BimilEngine.Source.Engine.Models.DrawShapes;
+using System.Linq;
+using System.Collections.Generic;
 
 namespace BimilEngine.Source.GameLogic.Sprites
 {
@@ -57,8 +59,6 @@ namespace BimilEngine.Source.GameLogic.Sprites
             // Body.IsSensor = true; // Use this to make the body a trigger
 
             // List<Fixture> fixtures = Environment2D.PhysicsWorld.RayCast(Vector2.Zero, Vector2.Zero); // Use this to raycast
-            DrawInterpolation = Interpolation2D.None;
-            // Rigidbody2D.Interpolation = Interpolation2D.Interpolate;
         }
 
         // RectangleDrawShape bodyDrawShape = new(new(0, 0, 20, 20), Color.Red);
@@ -91,7 +91,6 @@ namespace BimilEngine.Source.GameLogic.Sprites
             base.Start();
         }
 
-        LineDrawShape _rayCastShape = new(default, default, Color.Green, 1f, 0);
         public override void Update(GameTime gameTime)
         {
             // if (Keyboard.GetState().IsKeyPressed(Keys.Y))
@@ -99,23 +98,19 @@ namespace BimilEngine.Source.GameLogic.Sprites
             //     bodyDrawShape.Body = new(bodyDrawShape.Body.X, bodyDrawShape.Body.Y - 1, bodyDrawShape.Body.Width, bodyDrawShape.Body.Height);
             // }
 
-            // ! This is not working correctly when the FPS is over the PHYSICS_HERTZ
-            // if (LastDrawTime != null)
-            // {
-            //     Camera2D activeCamera = Environment2D.ActiveScene.ActiveCameras.FirstOrDefault();
-            //     float lastDeltaTime = (float)LastDrawTime.ElapsedGameTime.TotalSeconds;
-            //     float interpolationAlpha = MathHelper.Clamp(lastDeltaTime / DrawInterpolationTime, 0.0f, 1.0f);
-            //     activeCamera.MatrixPosition = Vector2.Lerp(LastDrawPosition, Position, interpolationAlpha);
-            // }
+            Camera2D activeCamera = Environment2D.ActiveScene.ActiveCameras.FirstOrDefault();
+            activeCamera.MatrixPosition = InterpolatedDrawPosition;
 
-            _rayCastShape.Start = Position;
-            _rayCastShape.End = Position + new Vector2(0, 10);
+            _rayCastShape.Start = InterpolatedDrawPosition;
+            _rayCastShape.End = InterpolatedDrawPosition + _rayCastDirection;
             AssociatedScene.AddOrUpdateDraw(new(_rayCastShape, cameraLevel: 0));
 
             // ---------
             base.Update(gameTime);
         }
 
+        readonly LineDrawShape _rayCastShape = new(default, default, Color.Green, 1f, 0);
+        readonly Vector2 _rayCastDirection = new(0, 20);
         Vector2 _moveDirection = Vector2.Zero;
         bool _isJumping = false;
         public override void FixedUpdate(GameTime gameTime, GameTime fixedGameTime)
@@ -130,6 +125,19 @@ namespace BimilEngine.Source.GameLogic.Sprites
             bool isKeyDownDown = keyboardState.IsKeyDown(Keys.Down);
             bool isKeyShiftDown = keyboardState.IsKeyDown(Keys.LeftShift);
 
+            List<Fixture> fixtures = Environment2D.PhysicsWorld.RayCast(InterpolatedDrawPosition, InterpolatedDrawPosition + _rayCastDirection);
+            if (fixtures.Any(x => x.GetParent().Tag == SpriteTags.Wall))
+            {
+                IsGrounded = true;
+                _isJumping = false;
+                LogManager.DoConsoleLog($"Grounded", LogLevel.Debug);
+            }
+            else
+            {
+                IsGrounded = false;
+                LogManager.DoConsoleLog($"Not Grounded", LogLevel.Debug);
+            }
+
             // if (isKeyShiftDown)
             //     MovementSpeed = 100f;
             // else
@@ -139,7 +147,7 @@ namespace BimilEngine.Source.GameLogic.Sprites
             {
                 Rigidbody2D.Body.LinearVelocity = new Vector2(-MovementSpeed * 100 * deltaTime, Rigidbody2D.Body.LinearVelocity.Y);
                 _moveDirection = Vector2Direction.Left;
-                if (_isJumping)
+                if (!IsGrounded)
                     AnimationHandler.PlayAnimation("Left Up");
                 else
                     AnimationHandler.PlayAnimation("Left");
@@ -148,7 +156,7 @@ namespace BimilEngine.Source.GameLogic.Sprites
             {
                 Rigidbody2D.Body.LinearVelocity = new Vector2(MovementSpeed * 100 * deltaTime, Rigidbody2D.Body.LinearVelocity.Y);
                 _moveDirection = Vector2Direction.Right;
-                if (_isJumping)
+                if (!IsGrounded)
                     AnimationHandler.PlayAnimation("Right Up");
                 else
                     AnimationHandler.PlayAnimation("Right");
@@ -156,7 +164,7 @@ namespace BimilEngine.Source.GameLogic.Sprites
             else // Not moving left or right
             {
                 Rigidbody2D.Body.LinearVelocity = new Vector2(0, Rigidbody2D.Body.LinearVelocity.Y);
-                if (_isJumping)
+                if (!IsGrounded)
                 {
                     if (_moveDirection == Vector2Direction.Left)
                         AnimationHandler.PlayAnimation("Left Up");
@@ -172,7 +180,7 @@ namespace BimilEngine.Source.GameLogic.Sprites
                 }
             }
 
-            if (isKeyPressedUp) // Jumping
+            if (IsGrounded && isKeyPressedUp) // Jumping
             {
                 Rigidbody2D.Body.LinearVelocity = new Vector2(Rigidbody2D.Body.LinearVelocity.X, -JumpPower);
                 _isJumping = true;

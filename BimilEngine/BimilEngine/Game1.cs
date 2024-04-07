@@ -33,6 +33,11 @@ namespace BimilEngine
             ? 1f / Environment2D.ScreenHandler.MaxFramesPerSecond
             : 0.00001f;
 
+        /// <summary>
+        /// The calculated interpolation alpha. The calculation is done in the Update method.
+        /// </summary>
+        public static float InterpolationAlpha { get; private set; } = 0f;
+
         public Game1()
         {
             Globals.Graphics = new GraphicsDeviceManager(this);
@@ -92,6 +97,8 @@ namespace BimilEngine
                 Environment2D.FixedUpdate(correctedGameTime, fixedGameTime);
                 elapsedTimeForFixedUpdate -= FixedUpdateTimeStep;
             }
+
+            InterpolationAlpha = elapsedTimeForFixedUpdate / FixedUpdateTimeStep;
 
             Environment2D.Update(gameTime);
 

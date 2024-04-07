@@ -17,20 +17,15 @@ namespace BimilEngine.Source.Engine.Models
         public Body Body => _body;
         private Body _body;
         /// <summary>
-        /// The interpolation of the rigidbody.
-        /// </summary>
-        public Interpolation2D Interpolation { get; set; } = Interpolation2D.None;
-        /// <summary>
         /// Is the rigidbody destroyed?
         /// </summary>
         public bool IsDestroyed => _isDestroyed;
         private bool _isDestroyed = false;
 
-        public Rigidbody2D(PhysicsSprite2D parent, Body body, Interpolation2D interpolation = Interpolation2D.None)
+        public Rigidbody2D(PhysicsSprite2D parent, Body body)
         {
             _parent = parent;
             _body = body;
-            Interpolation = interpolation;
 
             _body.UserData = _parent;
 

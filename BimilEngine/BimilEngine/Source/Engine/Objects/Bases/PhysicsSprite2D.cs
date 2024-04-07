@@ -35,35 +35,45 @@ namespace BimilEngine.Source.Engine.Objects.Bases
         /// Rigidbody2D of the sprite.
         /// </summary>
         public Rigidbody2D Rigidbody2D { get; set; } = null;
-        
+
         /// <summary>
-        /// Draw interpolation of the sprite.
+        /// Interpolation mode of the sprite.
         /// </summary>
-        public Interpolation2D DrawInterpolation { get; set; } = Interpolation2D.Interpolate;
+        public Interpolation2D Interpolation { get; set; } = Interpolation2D.Interpolate;
         /// <summary>
-        /// Draw interpolation time of the sprite.
+        /// Interpolation hotspot of the sprite.
         /// </summary>
-        public float DrawInterpolationTime { get; set; } = 0.03f;
-        /// <summary>
-        /// Last draw time of the sprite, mainly used for draw interpolation. You should not modify this value.
-        /// </summary>
-        public GameTime LastDrawTime { get; set; } = null;
+        public const float INTERPOLATION_HOTSPOT = 0.03f;
         /// <summary>
         /// Last position of the transform, mainly used for position interpolation. You should not modify this value.
         /// </summary>
         public Vector2 LastPosition { get; set; } = Vector2.Zero;
         /// <summary>
-        /// Last draw position of the transform, mainly used for draw interpolation. You should not modify this value.
-        /// </summary>
-        public Vector2 LastDrawPosition { get; set; } = Vector2.Zero;
-        /// <summary>
         /// Last rotation of the transform, mainly used for rotation interpolation. You should not modify this value.
         /// </summary>
         public float LastRotation { get; set; } = 0f;
         /// <summary>
-        /// Last draw rotation of the transform, mainly used for draw interpolation. You should not modify this value.
+        /// Calculates and returns the interpolated draw position of the sprite.
         /// </summary>
-        public float LastDrawRotation { get; set; } = 0f;
+        public Vector2 InterpolatedDrawPosition
+        {
+            get
+            {
+                float interpolationAlpha = Game1.InterpolationAlpha;
+                return Vector2.Lerp(LastPosition, Position, interpolationAlpha);
+            }
+        }
+        /// <summary>
+        /// Calculates and returns the interpolated draw rotation of the sprite.
+        /// </summary>
+        public float InterpolatedDrawRotation
+        {
+            get
+            {
+                float interpolationAlpha = Game1.InterpolationAlpha;
+                return MathHelper.Lerp(LastRotation, Rotation, interpolationAlpha);
+            }
+        }
 
         private readonly HashSet<(Fixture, Fixture, Contact)> _activeCollisions = new();
 
@@ -105,7 +115,7 @@ namespace BimilEngine.Source.Engine.Objects.Bases
 
             if (!ongoingAnimations.Any())
             {
-                DrawTexture(Texture, gameTime, DrawInterpolation);
+                DrawTexture(Texture, gameTime, Interpolation);
             }
             else
             {
@@ -152,7 +162,7 @@ namespace BimilEngine.Source.Engine.Objects.Bases
                     else if (_ongoingTextureDraws[ongoingAnimation].Value.Texture != texture) // If there is an ongoing texture draw
                         continue; // Skip drawing the current texture
 
-                    DrawTexture(texture, gameTime, DrawInterpolation); // Draw it
+                    DrawTexture(texture, gameTime, Interpolation); // Draw it
 
                     if (totalElapsedTime - _ongoingTextureDraws[ongoingAnimation]?.DrawTime <= duration) // If the current texture draw has not yet finished
                     {
@@ -182,12 +192,9 @@ namespace BimilEngine.Source.Engine.Objects.Bases
                 float rotation;
                 if (interpolation == Interpolation2D.Interpolate)
                 {
-                    float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
-                    float interpolationAlpha = MathHelper.Clamp(deltaTime / DrawInterpolationTime, 0.0f, 1.0f);
-
                     // Interpolate position and rotation
-                    position = Vector2.Lerp(LastDrawPosition, Position, interpolationAlpha);
-                    rotation = MathHelper.Lerp(LastDrawRotation, Rotation, interpolationAlpha);
+                    position = InterpolatedDrawPosition;
+                    rotation = InterpolatedDrawRotation;
                 }
                 else
                 {
@@ -198,10 +205,6 @@ namespace BimilEngine.Source.Engine.Objects.Bases
                 Vector2 origin = new(texture.Width / 2, texture.Height / 2);
 
                 Globals.SpriteBatch.Draw(texture, position, null, Color.White, rotation, origin, Scale, SpriteEffects, SortingLayer);
-
-                LastDrawPosition = position;
-                LastDrawRotation = rotation;
-                LastDrawTime = gameTime;
             }
         }
 
