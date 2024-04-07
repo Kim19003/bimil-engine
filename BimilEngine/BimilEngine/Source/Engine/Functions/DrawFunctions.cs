@@ -82,24 +82,24 @@ namespace BimilEngine.Source.Engine.Functions
             Globals.SpriteBatch.End();
         }
 
-        public static void DrawDebugs(SceneHandler sceneHandler, GameTime gameTime)
+        public static void DrawDraws(SceneHandler sceneHandler, GameTime gameTime)
         {
-            // Get the debug draws from the active scene
-            IReadOnlyCollection<DebugDraw> debugDraws = sceneHandler.ActiveScene.DebugDraws;
+            // Get the draws from the active scene
+            IReadOnlyCollection<Draw> draws = sceneHandler.ActiveScene.Draws;
 
-            if (debugDraws == null || !debugDraws.Any()) return;
+            if (draws == null || !draws.Any()) return;
             
             // Draw the debugs
             foreach (Camera2D activeCamera in sceneHandler.ActiveScene.ActiveCameras.OrderByDescending(c => c.CameraLevel))
             {
-                HandleDebugDraws(debugDraws, activeCamera, gameTime);
+                HandleDraws(draws, activeCamera, gameTime);
             }
             
             if (sceneHandler.ActiveScene.ActiveCameras.Any())
                 Globals.Graphics.GraphicsDevice.Viewport = Environment2D.ScreenHandler.Viewport;
 
-            // Handle the screen level debug draws
-            HandleDebugDraws(debugDraws, null, gameTime);
+            // Handle the screen level draws
+            HandleDraws(draws, null, gameTime);
         }
 
         public static void DrawGrid(GridSettings gridSettings)
@@ -140,13 +140,13 @@ namespace BimilEngine.Source.Engine.Functions
             Globals.SpriteBatch.End();
         }
 
-        private static void HandleDebugDraws(IReadOnlyCollection<DebugDraw> debugDraws, Camera2D drawCamera, GameTime gameTime)
+        private static void HandleDraws(IReadOnlyCollection<Draw> draws, Camera2D drawCamera, GameTime gameTime)
         {
-            HashSet<DebugDraw> cameraLevelDebugDraws = debugDraws
+            HashSet<Draw> cameraLevelDraws = draws
                     .Where(d => d.CameraLevel == (drawCamera == null ? -1 : drawCamera.CameraLevel))
                     .ToHashSet();
 
-            if (!cameraLevelDebugDraws.Any()) return;
+            if (!cameraLevelDraws.Any()) return;
 
             if (drawCamera != null)
             {
@@ -161,23 +161,23 @@ namespace BimilEngine.Source.Engine.Functions
             Globals.SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend,
                 transformMatrix: drawCamera?.Matrix);
 
-            foreach (DebugDraw cameraLevelDebugDraw in cameraLevelDebugDraws)
+            foreach (Draw cameraLevelDraw in cameraLevelDraws)
             {
-                if (cameraLevelDebugDraw.Object == null) continue;
+                if (cameraLevelDraw.Object == null) continue;
 
-                switch (cameraLevelDebugDraw.Object)
+                switch (cameraLevelDraw.Object)
                 {
                     case Log log:
-                        HandleLogDebugDraw(log, cameraLevelDebugDraw.Color, cameraLevelDebugDraw.LifeTime, gameTime);
+                        HandleLogDraw(log, cameraLevelDraw.Color, cameraLevelDraw.LifeTime, gameTime);
                         break;
                     case Body body:
-                        HandleBodyDebugDraw(cameraLevelDebugDraw.LineThickness, body, cameraLevelDebugDraw.Color);
+                        HandleBodyDraw(cameraLevelDraw.LineThickness, body, cameraLevelDraw.Color);
                         break;
                     case Camera2D camera:
-                        HandleCameraDebugDraw(cameraLevelDebugDraw.CameraLevel, cameraLevelDebugDraw.LineThickness, camera, cameraLevelDebugDraw.Color);
+                        HandleCameraDraw(cameraLevelDraw.CameraLevel, cameraLevelDraw.LineThickness, camera, cameraLevelDraw.Color);
                         break;
                     case DrawShapeBase drawShape:
-                        HandleDrawShapeDebugDraw(drawShape);
+                        HandleDrawShapeDraw(drawShape);
                         break;
                     // TODO: Add more debug drawing logic here if needed
                 }
@@ -188,7 +188,7 @@ namespace BimilEngine.Source.Engine.Functions
         }
 
         private static Dictionary<Log, (Log LogMirror, float LastDrawTime, float LifeTime, float TotalLifeTime)> _logDrawTimes = new();
-        private static void HandleLogDebugDraw(Log log, Color color, float lifeTime, GameTime gameTime)
+        private static void HandleLogDraw(Log log, Color color, float lifeTime, GameTime gameTime)
         {
             float totalElapsedMilliseconds = (float)gameTime.TotalGameTime.TotalMilliseconds;
 
@@ -218,7 +218,7 @@ namespace BimilEngine.Source.Engine.Functions
 
             if (_logDrawTimes[log].LifeTime > 0 && _logDrawTimes[log].LastDrawTime >= _logDrawTimes[log].TotalLifeTime) // Remove the log after it's lifetime has passed
             {
-                Environment2D.ActiveScene.RemoveDebugDraw(new(log, Color.White));
+                Environment2D.ActiveScene.RemoveDraw(new(log, Color.White));
                 int logKey = LogManager.ShownScreenLogs.FirstOrDefault(l => l.Value == log).Key;
                 LogManager.ShownScreenLogs.Remove(logKey);
                 LogManager.ShownScreenLogs.RearrangeSequence(LogManager.LogScreenStartPosition, LogManager.ShownLogVerticalSpacing);
@@ -233,7 +233,7 @@ namespace BimilEngine.Source.Engine.Functions
             Globals.SpriteBatch.DrawString(Globals.LogFont, log.Message, log.Position, color);
         }
 
-        private static void HandleBodyDebugDraw(float lineThickness, Body body, Color color)
+        private static void HandleBodyDraw(float lineThickness, Body body, Color color)
         {
             foreach (Fixture fixture in body.FixtureList)
             {
@@ -256,7 +256,7 @@ namespace BimilEngine.Source.Engine.Functions
             }
         }
 
-        private static void HandleCameraDebugDraw(int cameraLevel, float lineThickness, Camera2D camera, Color color)
+        private static void HandleCameraDraw(int cameraLevel, float lineThickness, Camera2D camera, Color color)
         {
             if (cameraLevel == -1)
             {
@@ -271,7 +271,7 @@ namespace BimilEngine.Source.Engine.Functions
             }
         }
 
-        private static void HandleDrawShapeDebugDraw(object drawShape)
+        private static void HandleDrawShapeDraw(object drawShape)
         {
             switch (drawShape)
             {

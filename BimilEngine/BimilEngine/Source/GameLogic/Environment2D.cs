@@ -191,7 +191,7 @@ namespace BimilEngine.Source.GameLogic
             ScreenHandler.UpdateFramesPerSecond(fps);
 
             DrawFunctions.DrawSprites(_sceneHandler, gameTime);
-            DrawFunctions.DrawDebugs(_sceneHandler, gameTime);
+            DrawFunctions.DrawDraws(_sceneHandler, gameTime);
 
             if (GridSettings.Enabled)
             {
@@ -229,7 +229,7 @@ namespace BimilEngine.Source.GameLogic
             main.AddGadgets(new object[]
             {
                 new GameController(Vector2.Zero, Vector2.Zero, 0, "Game Controller"),
-                new Camera2D(Vector2.Zero, new(ScreenHandler.Width, ScreenHandler.Height), 1, "Main Camera")
+                new Camera2D(Vector2.Zero, new(ScreenHandler.Width, ScreenHandler.Height), 0, "Main Camera")
                 {
                     Depth = 2,
                     SortMode = SpriteSortMode.Deferred,
@@ -290,7 +290,7 @@ namespace BimilEngine.Source.GameLogic
                 // secondCamera,
             });
 
-            main.AddOrUpdateDebugDraws(new DebugDraw[]
+            main.AddOrUpdateDraws(new Draw[]
             {
                 // new(mainCamera, Color.Red, lineThickness: 5),
                 // new(secondCamera, Color.Orange) { CameraLevel = secondCamera.Level },

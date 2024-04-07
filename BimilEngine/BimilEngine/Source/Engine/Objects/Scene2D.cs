@@ -25,10 +25,10 @@ namespace BimilEngine.Source.Engine.Objects
         public IReadOnlyCollection<object> Sprites => _sprites;
         private readonly HashSet<object> _sprites = new();
         /// <summary>
-        /// Debug draws collection. Use the AddDebugDraw(s) and RemoveDebugDraw(s) methods to add and remove debug draws.
+        /// Debug draws collection. Use the AddDraw(s) and RemoveDraw(s) methods to add and remove draws.
         /// </summary>
-        public IReadOnlyCollection<DebugDraw> DebugDraws => _debugDraws;
-        private readonly HashSet<DebugDraw> _debugDraws = new();
+        public IReadOnlyCollection<Draw> Draws => _draws;
+        private readonly HashSet<Draw> _draws = new();
         // Components
         // TODO: Add component collections if needed
 
@@ -41,7 +41,7 @@ namespace BimilEngine.Source.Engine.Objects
                 {
                     Gadgets,
                     Sprites,
-                    DebugDraws,
+                    Draws,
                     // TODO: Add all new collections here
                 };
                 
@@ -173,54 +173,54 @@ namespace BimilEngine.Source.Engine.Objects
         }
 
         /// <summary>
-        /// Add or update an object to be drawn as debug. Uses debugDraw.Object as the reference.
+        /// Add or update an object to be drawn. Uses draw.Object as the reference.
         /// </summary>
-        public void AddOrUpdateDebugDraw(DebugDraw debugDraw)
+        public void AddOrUpdateDraw(Draw draw)
         {
-            DebugDraw existingDebugDraw = DebugDraws.FirstOrDefault(d => d.Object == debugDraw.Object);
-            if (existingDebugDraw != null)
+            Draw existingDraw = Draws.FirstOrDefault(d => d.Object == draw.Object);
+            if (existingDraw != null)
             {
-                existingDebugDraw.Color = debugDraw.Color;
-                existingDebugDraw.LifeTime = debugDraw.LifeTime;
-                existingDebugDraw.CameraLevel = debugDraw.CameraLevel;
+                existingDraw.Color = draw.Color;
+                existingDraw.LifeTime = draw.LifeTime;
+                existingDraw.CameraLevel = draw.CameraLevel;
             }
             else
             {
-                _debugDraws.Add(debugDraw);
+                _draws.Add(draw);
             }
         }
 
         /// <summary>
-        /// Add or update objects to be drawn as debug. Uses debugDraw.Object as the reference.
+        /// Add or update objects to be drawn. Uses draw.Object as the reference.
         /// </summary>
-        public void AddOrUpdateDebugDraws(DebugDraw[] debugDraws)
+        public void AddOrUpdateDraws(Draw[] draws)
         {
-            foreach (DebugDraw debugDraw in debugDraws)
+            foreach (Draw draw in draws)
             {
-                AddOrUpdateDebugDraw(debugDraw);
+                AddOrUpdateDraw(draw);
             }
         }
 
         /// <summary>
-        /// Remove an object from being drawn as debug. Uses debugDraw.Object as the reference.
+        /// Remove an object from being drawn. Uses draw.Object as the reference.
         /// </summary>
-        public void RemoveDebugDraw(DebugDraw debugDraw)
+        public void RemoveDraw(Draw draw)
         {
-            DebugDraw existingDebugDraw = DebugDraws.FirstOrDefault(d => d.Object == debugDraw.Object);
-            if (existingDebugDraw != null)
+            Draw existingDraw = Draws.FirstOrDefault(d => d.Object == draw.Object);
+            if (existingDraw != null)
             {
-                _debugDraws.Remove(existingDebugDraw);
+                _draws.Remove(existingDraw);
             }
         }
 
         /// <summary>
-        /// Remove objects from being drawn as debug. Uses debugDraw.Object as the reference.
+        /// Remove objects from being drawn. Uses draw.Object as the reference.
         /// </summary>
-        public void RemoveDebugDraws(DebugDraw[] debugDraws)
+        public void RemoveDraws(Draw[] draws)
         {
-            foreach (DebugDraw debugDraw in debugDraws)
+            foreach (Draw draw in draws)
             {
-                RemoveDebugDraw(debugDraw);
+                RemoveDraw(draw);
             }
         }
 

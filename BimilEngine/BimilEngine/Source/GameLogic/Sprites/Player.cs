@@ -1,4 +1,3 @@
-using System.Linq;
 using Genbox.VelcroPhysics.Collision.Shapes;
 using Genbox.VelcroPhysics.Definitions;
 using Genbox.VelcroPhysics.Dynamics;
@@ -16,10 +15,9 @@ using Genbox.VelcroPhysics.Collision.ContactSystem;
 using BimilEngine.Source.Engine.Interfaces;
 using BimilEngine.Source.Engine.Handlers;
 using BimilEngine.Source.Engine;
-using Microsoft.Xna.Framework.Graphics;
-using System.Collections.Generic;
 using System;
 using BimilEngine.Source.GameLogic.Models;
+using BimilEngine.Source.Engine.Models.DrawShapes;
 
 namespace BimilEngine.Source.GameLogic.Sprites
 {
@@ -59,13 +57,15 @@ namespace BimilEngine.Source.GameLogic.Sprites
             // Body.IsSensor = true; // Use this to make the body a trigger
 
             // List<Fixture> fixtures = Environment2D.PhysicsWorld.RayCast(Vector2.Zero, Vector2.Zero); // Use this to raycast
+            DrawInterpolation = Interpolation2D.None;
+            // Rigidbody2D.Interpolation = Interpolation2D.Interpolate;
         }
 
         // RectangleDrawShape bodyDrawShape = new(new(0, 0, 20, 20), Color.Red);
 
         public override void Start()
         {
-            // AssociatedScene.AddOrUpdateDebugDraw(new(bodyDrawShape, cameraLevel: Environment2D.ActiveScene.ActiveCameras.First().CameraLevel));
+            // AssociatedScene.AddOrUpdateDraw(new(bodyDrawShape, cameraLevel: Environment2D.ActiveScene.ActiveCameras.First().CameraLevel));
 
             AnimationHandler.AddAnimations(new (string, Animation)[]
             {
@@ -91,6 +91,7 @@ namespace BimilEngine.Source.GameLogic.Sprites
             base.Start();
         }
 
+        LineDrawShape _rayCastShape = new(default, default, Color.Green, 1f, 0);
         public override void Update(GameTime gameTime)
         {
             // if (Keyboard.GetState().IsKeyPressed(Keys.Y))
@@ -106,6 +107,10 @@ namespace BimilEngine.Source.GameLogic.Sprites
             //     float interpolationAlpha = MathHelper.Clamp(lastDeltaTime / DrawInterpolationTime, 0.0f, 1.0f);
             //     activeCamera.MatrixPosition = Vector2.Lerp(LastDrawPosition, Position, interpolationAlpha);
             // }
+
+            _rayCastShape.Start = Position;
+            _rayCastShape.End = Position + new Vector2(0, 10);
+            AssociatedScene.AddOrUpdateDraw(new(_rayCastShape, cameraLevel: 0));
 
             // ---------
             base.Update(gameTime);

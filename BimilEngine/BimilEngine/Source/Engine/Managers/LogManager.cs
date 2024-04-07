@@ -79,7 +79,7 @@ namespace BimilEngine.Source.Engine.Managers
                 int firstLogKey = ShownScreenLogs.Keys.Min();
                 Log firstLog = ShownScreenLogs[firstLogKey];
 
-                Environment2D.ActiveScene.RemoveDebugDraw(new(firstLog, Color.White));
+                Environment2D.ActiveScene.RemoveDraw(new(firstLog, Color.White));
                 ShownScreenLogs.Remove(firstLogKey);
 
                 ShownScreenLogs.RearrangeSequence(logScreenStartPosition, ShownLogVerticalSpacing);
@@ -107,7 +107,7 @@ namespace BimilEngine.Source.Engine.Managers
                 _ => Color.White
             };
             
-            Environment2D.ActiveScene.AddOrUpdateDebugDraw(new(thisLog, logColor, lifeTime > 0 ? lifeTime : 0));
+            Environment2D.ActiveScene.AddOrUpdateDraw(new(thisLog, logColor, lifeTime > 0 ? lifeTime : 0));
             
             _screenLogs.Add(thisLog);
 
@@ -192,8 +192,8 @@ namespace BimilEngine.Source.Engine.Managers
         {
             if (Environment2D.ActiveScene != null)
             {
-                DebugDraw[] logDebugDraws = Environment2D.ActiveScene.DebugDraws.Where(dw => dw.Object is Log).ToArray();
-                Environment2D.ActiveScene.RemoveDebugDraws(logDebugDraws);
+                Draw[] logDraws = Environment2D.ActiveScene.Draws.Where(dw => dw.Object is Log).ToArray();
+                Environment2D.ActiveScene.RemoveDraws(logDraws);
             }
 
             ShownScreenLogs.Clear();

@@ -97,10 +97,6 @@ namespace BimilEngine.Source.Engine.Objects.Bases
             }
         }
 
-        /// <summary>
-        /// Used to store the ongoing texture draws of the animations.
-        /// </summary>
-        private readonly Dictionary<Animation, (Texture2D Texture, TimeSpan DrawTime)?> _ongoingTextureDraws = new();
         public virtual void Draw(GameTime gameTime, AnimationHandler animationHandler = null)
         {
             Animation[] ongoingAnimations = animationHandler != null
@@ -113,56 +109,65 @@ namespace BimilEngine.Source.Engine.Objects.Bases
             }
             else
             {
-                /*
-                    Clarification on the animations:
-                    
-                    - The animation is a sequence of textures and their durations.
-                    - The textures are drawn in a (sequential) order, and their durations are the time they are being drawn.
-                    - When the time of a texture's draw has finished, the next texture is drawn.
-                    - When the time of the last texture's draw has finished, the animation is finished.
-                    - The Repeat property of the animation determines if the animation should play again after it has finished.
-                    - Note: We are not drawing the textures frame by frame, but rather in a time-based manner.
-                */
+                HandleAnimations(ongoingAnimations, gameTime);
+            }
+        }
 
-                if (ongoingAnimations.Length > 1)
-                    LogManager.DoConsoleLog("PUA: There are more than one ongoing animations.", LogLevel.Warning);
+        /// <summary>
+        /// Used to store the ongoing texture draws of the animations.
+        /// </summary>
+        private readonly Dictionary<Animation, (Texture2D Texture, TimeSpan DrawTime)?> _ongoingTextureDraws = new();
+        private void HandleAnimations(Animation[] ongoingAnimations, GameTime gameTime)
+        {
+            /*
+                Clarification on the animations:
+                
+                - The animation is a sequence of textures and their durations.
+                - The textures are drawn in a (sequential) order, and their durations are the time they are being drawn.
+                - When the time of a texture's draw has finished, the next texture is drawn.
+                - When the time of the last texture's draw has finished, the animation is finished.
+                - The Repeat property of the animation determines if the animation should play again after it has finished.
+                - Note: We are not drawing the textures frame by frame, but rather in a time-based manner.
+            */
 
-                TimeSpan totalElapsedTime = gameTime.TotalGameTime;
+            if (ongoingAnimations.Length > 1)
+                LogManager.DoConsoleLog("PUA: There are more than one ongoing animations.", LogLevel.Warning);
 
-                foreach (Animation ongoingAnimation in ongoingAnimations)
+            TimeSpan totalElapsedTime = gameTime.TotalGameTime;
+
+            foreach (Animation ongoingAnimation in ongoingAnimations)
+            {
+                for (int i = 0; i < ongoingAnimation.Textures.Count; i++)
                 {
-                    for (int i = 0; i < ongoingAnimation.Textures.Count; i++)
-                    {
-                        bool isLastIteration = i == ongoingAnimation.Textures.Count - 1;
+                    bool isLastIteration = i == ongoingAnimation.Textures.Count - 1;
 
-                        Texture2D texture = ongoingAnimation.Textures[i].Texture; // The current texture
-                        TimeSpan duration = ongoingAnimation.Textures[i].Duration; // Duration of the current texture
+                    Texture2D texture = ongoingAnimation.Textures[i].Texture; // The current texture
+                    TimeSpan duration = ongoingAnimation.Textures[i].Duration; // Duration of the current texture
 
-                        if (!_ongoingTextureDraws.ContainsKey(ongoingAnimation)) // If the whole animation is not yet started
-                            _ongoingTextureDraws.Add(ongoingAnimation, (texture, totalElapsedTime)); // Start drawing the current texture
-                        else if (_ongoingTextureDraws[ongoingAnimation] == null) // If the animation's previous texture draw has finished
-                            _ongoingTextureDraws[ongoingAnimation] = (texture, totalElapsedTime); // Start drawing the current texture
+                    if (!_ongoingTextureDraws.ContainsKey(ongoingAnimation)) // If the whole animation is not yet started
+                        _ongoingTextureDraws.Add(ongoingAnimation, (texture, totalElapsedTime)); // Start drawing the current texture
+                    else if (_ongoingTextureDraws[ongoingAnimation] == null) // If the animation's previous texture draw has finished
+                        _ongoingTextureDraws[ongoingAnimation] = (texture, totalElapsedTime); // Start drawing the current texture
 #warning Use class instead of (Texture2D Texture, TimeSpan DrawTime) tuple, as we can't use the reference here!
-                        else if (_ongoingTextureDraws[ongoingAnimation].Value.Texture != texture) // If there is an ongoing texture draw
-                            continue; // Skip drawing the current texture
+                    else if (_ongoingTextureDraws[ongoingAnimation].Value.Texture != texture) // If there is an ongoing texture draw
+                        continue; // Skip drawing the current texture
 
-                        DrawTexture(texture, gameTime, DrawInterpolation); // Draw it
+                    DrawTexture(texture, gameTime, DrawInterpolation); // Draw it
 
-                        if (totalElapsedTime - _ongoingTextureDraws[ongoingAnimation]?.DrawTime <= duration) // If the current texture draw has not yet finished
+                    if (totalElapsedTime - _ongoingTextureDraws[ongoingAnimation]?.DrawTime <= duration) // If the current texture draw has not yet finished
+                    {
+                        // Do nothing
+                    }
+                    else // If the current texture draw is finished
+                    {
+                        _ongoingTextureDraws[ongoingAnimation] = null; // Remove the current texture draw from the ongoing draws
+
+                        if (isLastIteration) // If the current texture was the last texture in the animation
                         {
-                            // Do nothing
-                        }
-                        else // If the current texture draw is finished
-                        {
-                            _ongoingTextureDraws[ongoingAnimation] = null; // Remove the current texture draw from the ongoing draws
+                            ongoingAnimation.HasFinished = !ongoingAnimation.Repeat; // Finish the animation, if it's not repeating
+                            ongoingAnimation.IsPlaying = ongoingAnimation.Repeat; // If it's repeating, play it again
 
-                            if (isLastIteration) // If the current texture was the last texture in the animation
-                            {
-                                ongoingAnimation.HasFinished = !ongoingAnimation.Repeat; // Finish the animation, if it's not repeating
-                                ongoingAnimation.IsPlaying = ongoingAnimation.Repeat; // If it's repeating, play it again
-
-                                _ongoingTextureDraws.Remove(ongoingAnimation); // Remove the whole animation from the ongoing draws
-                            }
+                            _ongoingTextureDraws.Remove(ongoingAnimation); // Remove the whole animation from the ongoing draws
                         }
                     }
                 }
