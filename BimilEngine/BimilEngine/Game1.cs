@@ -34,6 +34,11 @@ namespace BimilEngine
             : 0.00001f;
 
         /// <summary>
+        /// The time scale of the game. This is used for the time manipulation.
+        /// </summary>
+        public static float TimeScale { get; set; } = 1f;
+
+        /// <summary>
         /// The calculated interpolation alpha. The calculation is done in the Update method.
         /// </summary>
         public static float InterpolationAlpha { get; private set; } = 0f;
@@ -81,13 +86,15 @@ namespace BimilEngine
                 IsFirstUpdateCall = false;
             }
 
-            float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
+            TimeSpan scaledElapsedGameTime = new((long)(gameTime.ElapsedGameTime.Ticks * TimeScale));
+
+            float deltaTime = (float)scaledElapsedGameTime.TotalSeconds;
             elapsedTimeForFixedUpdate += deltaTime;
 
             while (elapsedTimeForFixedUpdate >= FixedUpdateTimeStep) // Fixed update
             {
                 // Calculate the time between every frame update
-                TimeSpan correctedElapsedGameTime = new((long)(gameTime.ElapsedGameTime.Ticks * (FixedUpdateTimeStep / deltaTime)));
+                TimeSpan correctedElapsedGameTime = new((long)(scaledElapsedGameTime.Ticks * (FixedUpdateTimeStep / deltaTime)));
                 GameTime correctedGameTime = new(gameTime.TotalGameTime, correctedElapsedGameTime);
                 
                 // Calculate the time between every fixedupdate call (use elapsedTimeForFixedUpdate)
