@@ -6,7 +6,7 @@ using BimilEngine.Source.GameLogic;
 
 namespace BimilEngine
 {
-    public class Game1 : Game
+    public class Root : Game
     {
         /// <summary>
         /// The physics hertz of the game.
@@ -43,7 +43,7 @@ namespace BimilEngine
         /// </summary>
         public static float InterpolationAlpha { get; private set; } = 0f;
 
-        public Game1()
+        public Root()
         {
             Globals.Graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";

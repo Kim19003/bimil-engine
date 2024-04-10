@@ -1,3 +1,3 @@
 ﻿
-using var game = new BimilEngine.Game1();
+using var game = new BimilEngine.Root();
 game.Run();

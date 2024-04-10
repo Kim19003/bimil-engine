@@ -178,7 +178,7 @@ namespace BimilEngine.Source.GameLogic
         public static void FixedUpdate(GameTime gameTime, GameTime fixedGameTime)
         {
             PhysicsWorld.Gravity = PhysicsWorldGravity;
-            PhysicsWorld.Step(Game1.FixedUpdateTimeStep);
+            PhysicsWorld.Step(Root.FixedUpdateTimeStep);
             UpdateFunctions.HandleFixedUpdate(_sceneHandler, gameTime, fixedGameTime);
         }
 
@@ -326,8 +326,8 @@ namespace BimilEngine.Source.GameLogic
             PhysicsWorld = new(PhysicsWorldGravity);
             LogManager.ClearShownScreenLogs();
 
-            Game1.IsFirstUpdateCall = true;
-            Game1.IsFirstDrawCall = true;
+            Root.IsFirstUpdateCall = true;
+            Root.IsFirstDrawCall = true;
         }
 
         /// <summary>
