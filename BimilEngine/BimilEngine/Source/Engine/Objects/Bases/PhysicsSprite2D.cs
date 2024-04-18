@@ -147,18 +147,17 @@ namespace BimilEngine.Source.Engine.Objects.Bases
 
             foreach (Animation ongoingAnimation in ongoingAnimations)
             {
-                for (int i = 0; i < ongoingAnimation.Textures.Count; i++)
+                for (int i = 0; i < ongoingAnimation.DuratedTextures.Count; i++)
                 {
-                    bool isLastIteration = i == ongoingAnimation.Textures.Count - 1;
+                    bool isLastIteration = i == ongoingAnimation.DuratedTextures.Count - 1;
 
-                    Texture2D texture = ongoingAnimation.Textures[i].Texture; // The current texture
-                    TimeSpan duration = ongoingAnimation.Textures[i].Duration; // Duration of the current texture
+                    Texture2D texture = ongoingAnimation.DuratedTextures.ElementAt(i).Texture; // The current texture
+                    TimeSpan duration = ongoingAnimation.DuratedTextures.ElementAt(i).Duration; // Duration of the current texture
 
                     if (!_ongoingTextureDraws.ContainsKey(ongoingAnimation)) // If the whole animation is not yet started
                         _ongoingTextureDraws.Add(ongoingAnimation, (texture, totalElapsedTime)); // Start drawing the current texture
                     else if (_ongoingTextureDraws[ongoingAnimation] == null) // If the animation's previous texture draw has finished
                         _ongoingTextureDraws[ongoingAnimation] = (texture, totalElapsedTime); // Start drawing the current texture
-#warning Use class instead of (Texture2D Texture, TimeSpan DrawTime) tuple, as we can't use the reference here!
                     else if (_ongoingTextureDraws[ongoingAnimation].Value.Texture != texture) // If there is an ongoing texture draw
                         continue; // Skip drawing the current texture
 

@@ -52,7 +52,7 @@ namespace BimilEngine.Source.GameLogic
         /// <summary>
         /// Gravity used in the physics world.
         /// </summary>
-        public static Vector2 PhysicsWorldGravity { get; set; } = new(0, 147f); // Default is usually (0, 9.81f)
+        public static Vector2 PhysicsWorldGravity { get; set; } = new(0, 200f); // Default is usually (0, 9.81f)
 
         /// <summary>
         /// The active scene.

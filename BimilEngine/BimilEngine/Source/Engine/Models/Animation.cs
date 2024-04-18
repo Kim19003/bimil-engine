@@ -8,14 +8,14 @@ namespace BimilEngine.Source.Engine.Models
     public sealed class Animation : IDisposable
     {
         /// <summary>
-        /// The textures and their durations in the animation.
+        /// The durated textures (textures with durations) in the animation.
         /// </summary>
-        public List<(TimeSpan Duration, Texture2D Texture)> Textures { get; } = new();
+        public HashSet<DuratedTexture> DuratedTextures { get; } = new();
         /// <summary>
         /// The duration of the animation.
         /// </summary>
-        public TimeSpan Duration => Textures.Any()
-            ? Textures.Select(t => t.Duration).Aggregate((a, b) => a + b)
+        public TimeSpan Duration => DuratedTextures.Any()
+            ? DuratedTextures.Select(t => t.Duration).Aggregate((a, b) => a + b)
             : TimeSpan.Zero;
         /// <summary>
         /// Is the animation playing?
@@ -37,17 +37,26 @@ namespace BimilEngine.Source.Engine.Models
 
         }
 
-        public Animation(List<(TimeSpan Duration, Texture2D Texture)> textures, bool repeat = true)
+        public Animation(DuratedTexture duratedTexture, bool repeat = true)
         {
-            Textures.AddRange(textures);
+            DuratedTextures.Add(duratedTexture);
+            Repeat = repeat;
+        }
+
+        public Animation(HashSet<DuratedTexture> duratedTextures, bool repeat = true)
+        {
+            foreach (DuratedTexture duratedTexture in duratedTextures)
+            {
+                DuratedTextures.Add(duratedTexture);
+            }
             Repeat = repeat;
         }
 
         public void Dispose()
         {
-            foreach ((_, Texture2D Texture) in Textures)
+            foreach (DuratedTexture duratedTexture in DuratedTextures)
             {
-                Texture.Dispose();
+                duratedTexture.Texture.Dispose();
             }
         }
     }

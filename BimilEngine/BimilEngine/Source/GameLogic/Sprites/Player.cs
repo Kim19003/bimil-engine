@@ -67,30 +67,25 @@ namespace BimilEngine.Source.GameLogic.Sprites
         {
             // AssociatedScene.AddOrUpdateDraw(new(bodyDrawShape, cameraLevel: Environment2D.ActiveScene.ActiveCameras.First().CameraLevel));
 
-            AnimationHandler.AddAnimations(new (string, Animation)[]
+            Animation left = new(new DuratedTexture(TimeSpan.FromSeconds(1), Globals.TextureBatch["Square Head Idle Gun Looking Left"]));
+            Animation leftUp = new(new DuratedTexture(TimeSpan.FromSeconds(1), Globals.TextureBatch["Square Head Idle Gun Looking Left Hands Up"]));
+            Animation right = new(new DuratedTexture(TimeSpan.FromSeconds(1), Globals.TextureBatch["Square Head Idle Gun Looking Right"]));
+            Animation rightUp = new(new DuratedTexture(TimeSpan.FromSeconds(1), Globals.TextureBatch["Square Head Idle Gun Looking Right Hands Up"]));
+
+            AnimationHandler.AddAnimations(new[]
             {
-                ("Left", new(new()
-                {
-                    (TimeSpan.FromSeconds(1), Globals.TextureBatch["Square Head Idle Gun Looking Left"]),
-                })),
-                ("Left Up", new(new()
-                {
-                    (TimeSpan.FromSeconds(1), Globals.TextureBatch["Square Head Idle Gun Looking Left Hands Up"]),
-                })),
-                ("Right", new(new()
-                {
-                    (TimeSpan.FromSeconds(1), Globals.TextureBatch["Square Head Idle Gun Looking Right"]),
-                })),
-                ("Right Up", new(new()
-                {
-                    (TimeSpan.FromSeconds(1), Globals.TextureBatch["Square Head Idle Gun Looking Right Hands Up"]),
-                })),
+                ("Left", left ),
+                ("Left Up", leftUp ),
+                ("Right", right ),
+                ("Right Up", rightUp )
             });
 
             // ---------
             base.Start();
         }
 
+        readonly LineDrawShape _rayCastShape = new(default, default, Color.Green, 1f, 0);
+        readonly Vector2 _rayCastDirection = new(0, 20);
         public override void Update(GameTime gameTime)
         {
             // if (Keyboard.GetState().IsKeyPressed(Keys.Y))
@@ -101,16 +96,14 @@ namespace BimilEngine.Source.GameLogic.Sprites
             Camera2D activeCamera = Environment2D.ActiveScene.ActiveCameras.FirstOrDefault();
             activeCamera.MatrixPosition = InterpolatedDrawPosition;
 
-            _rayCastShape.Start = InterpolatedDrawPosition;
-            _rayCastShape.End = InterpolatedDrawPosition + _rayCastDirection;
-            AssociatedScene.AddOrUpdateDraw(new(_rayCastShape, cameraLevel: 0));
+            // _rayCastShape.Start = InterpolatedDrawPosition;
+            // _rayCastShape.End = InterpolatedDrawPosition + _rayCastDirection;
+            // AssociatedScene.AddOrUpdateDraw(new(_rayCastShape, cameraLevel: 0));
 
             // ---------
             base.Update(gameTime);
         }
 
-        readonly LineDrawShape _rayCastShape = new(default, default, Color.Green, 1f, 0);
-        readonly Vector2 _rayCastDirection = new(0, 20);
         Vector2 _moveDirection = Vector2.Zero;
         bool _isJumping = false;
         public override void FixedUpdate(GameTime gameTime, GameTime fixedGameTime)
@@ -121,7 +114,7 @@ namespace BimilEngine.Source.GameLogic.Sprites
 
             bool isKeyDownLeft = keyboardState.IsKeyDown(Keys.Left);
             bool isKeyDownRight = keyboardState.IsKeyDown(Keys.Right);
-            bool isKeyPressedUp = keyboardState.IsKeyPressed(Keys.Up);
+            bool isKeyPressedUp = keyboardState.IsKeyDown(Keys.Up);
             bool isKeyDownDown = keyboardState.IsKeyDown(Keys.Down);
             bool isKeyShiftDown = keyboardState.IsKeyDown(Keys.LeftShift);
 
