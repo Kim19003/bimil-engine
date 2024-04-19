@@ -248,7 +248,8 @@ namespace BimilEngine.Source.Engine.Functions
                         Globals.SpriteBatch.DrawPolygon(new(vertices.ToArray(), color, lineThickness));
                         break;
                     case CircleShape circleShape:
-                        Circle circle = new(Helpers.ConvertToPoint(body.Position), (int)circleShape.Radius);
+                        Vector2 position = body.Position + circleShape.Position;
+                        Circle circle = new(Helpers.ConvertToPoint(position), (int)circleShape.Radius);
                         Globals.SpriteBatch.DrawCircle(new(circle, color, lineThickness));
                         break;
                     // TODO: Add more shapes here if needed

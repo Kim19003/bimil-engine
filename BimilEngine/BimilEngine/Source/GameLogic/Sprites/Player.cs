@@ -20,6 +20,7 @@ using BimilEngine.Source.GameLogic.Models;
 using BimilEngine.Source.Engine.Models.DrawShapes;
 using System.Linq;
 using System.Collections.Generic;
+using System.Globalization;
 
 namespace BimilEngine.Source.GameLogic.Sprites
 {
@@ -48,6 +49,11 @@ namespace BimilEngine.Source.GameLogic.Sprites
             {
                 Shape = new PolygonShape(rectangleVertices, 1f),
             });
+            Rigidbody2D.Body.CreateFixture(new FixtureDef()
+            {
+                Shape = new CircleShape(4, 0f, new Vector2(0, 13)),
+                IsSensor = true
+            });
 
             // Rigidbody2D.Body.Restitution = 1f; // Bounciness
             // Body.Friction = 0.5f; // Friction
@@ -65,6 +71,7 @@ namespace BimilEngine.Source.GameLogic.Sprites
 
         public override void Start()
         {
+            AssociatedScene.AddOrUpdateDraw(new(Rigidbody2D.Body, Color.GreenYellow, cameraLevel: CameraLevel));
             // AssociatedScene.AddOrUpdateDraw(new(bodyDrawShape, cameraLevel: Environment2D.ActiveScene.ActiveCameras.First().CameraLevel));
 
             Animation left = new(new DuratedTexture(TimeSpan.FromSeconds(1), Globals.TextureBatch["Square Head Idle Gun Looking Left"]));
@@ -118,18 +125,18 @@ namespace BimilEngine.Source.GameLogic.Sprites
             bool isKeyDownDown = keyboardState.IsKeyDown(Keys.Down);
             bool isKeyShiftDown = keyboardState.IsKeyDown(Keys.LeftShift);
 
-            List<Fixture> fixtures = Environment2D.PhysicsWorld.RayCast(InterpolatedDrawPosition, InterpolatedDrawPosition + _rayCastDirection);
-            if (fixtures.Any(x => x.GetParent().Tag == SpriteTags.Wall))
-            {
-                IsGrounded = true;
-                _isJumping = false;
-                LogManager.DoConsoleLog($"Grounded", LogLevel.Debug);
-            }
-            else
-            {
-                IsGrounded = false;
-                LogManager.DoConsoleLog($"Not Grounded", LogLevel.Debug);
-            }
+            // List<Fixture> fixtures = Environment2D.PhysicsWorld.RayCast(InterpolatedDrawPosition, InterpolatedDrawPosition + _rayCastDirection);
+            // if (fixtures.Any(x => x.GetParent().Tag == SpriteTags.Wall))
+            // {
+            //     IsGrounded = true;
+            //     _isJumping = false;
+            //     LogManager.DoConsoleLog($"Grounded", LogLevel.Debug);
+            // }
+            // else
+            // {
+            //     IsGrounded = false;
+            //     LogManager.DoConsoleLog($"Not Grounded", LogLevel.Debug);
+            // }
 
             // if (isKeyShiftDown)
             //     MovementSpeed = 100f;
@@ -192,12 +199,6 @@ namespace BimilEngine.Source.GameLogic.Sprites
         public override void OnCollisionEnter2D(Fixture current, Fixture other, Contact contact)
         {
             LogManager.DoConsoleLog($"Collision Enter", LogLevel.Debug);
-
-            PhysicsSprite2D otherSprite = other.GetParent();
-            if (otherSprite.Tag == SpriteTags.Wall)
-            {
-                _isJumping = false;
-            }
         }
 
         public override void OnCollisionStay2D(Fixture current, Fixture other, Contact contact)
@@ -213,11 +214,30 @@ namespace BimilEngine.Source.GameLogic.Sprites
         public override void OnCollisionExit2D(Fixture current, Fixture other, Contact contact)
         {
             LogManager.DoConsoleLog($"Collision Exit", LogLevel.Debug);
+        }
 
-            // if (((Sprite2D)collision.OtherCollider.AssociatedGameObject).Tag == SpriteTags.Wall)
-            // {
-                
-            // }
+        public override void OnTriggerEnter2D(Fixture current, Fixture other, Contact contact)
+        {
+            LogManager.DoConsoleLog($"Trigger Enter", LogLevel.Debug);
+
+            PhysicsSprite2D otherSprite = other.GetParent();
+            if (current.FixtureId == 1 && otherSprite.Tag == SpriteTags.Wall)
+            {
+                IsGrounded = true;
+                _isJumping = false;
+            }
+        }
+
+        public override void OnTriggerExit2D(Fixture current, Fixture other, Contact contact)
+        {
+            LogManager.DoConsoleLog($"Trigger Exit", LogLevel.Debug);
+
+            PhysicsSprite2D otherSprite = other.GetParent();
+            if (current.FixtureId == 1 && otherSprite.Tag == SpriteTags.Wall)
+            {
+                IsGrounded = false;
+                _isJumping = true;
+            }
         }
 
         // private void HandleCollisionBounce(Direction2D? collisionDirection, float bouncePower)
