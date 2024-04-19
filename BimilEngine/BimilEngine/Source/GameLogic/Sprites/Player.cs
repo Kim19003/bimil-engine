@@ -51,7 +51,7 @@ namespace BimilEngine.Source.GameLogic.Sprites
             });
             Rigidbody2D.Body.CreateFixture(new FixtureDef()
             {
-                Shape = new CircleShape(4, 0f, new Vector2(0, 13)),
+                Shape = new CircleShape(5, 0f, new Vector2(0, 13)),
                 IsSensor = true
             });
 
@@ -111,6 +111,7 @@ namespace BimilEngine.Source.GameLogic.Sprites
             base.Update(gameTime);
         }
 
+        bool _canMoveHorizontally = true;
         Vector2 _moveDirection = Vector2.Zero;
         bool _isJumping = false;
         public override void FixedUpdate(GameTime gameTime, GameTime fixedGameTime)
@@ -143,7 +144,7 @@ namespace BimilEngine.Source.GameLogic.Sprites
             // else
             //     MovementSpeed = 10f;
 
-            if (isKeyDownLeft) // Moving left
+            if (_canMoveHorizontally && isKeyDownLeft) // Moving left
             {
                 Rigidbody2D.Body.LinearVelocity = new Vector2(-MovementSpeed * 100 * deltaTime, Rigidbody2D.Body.LinearVelocity.Y);
                 _moveDirection = Vector2Direction.Left;
@@ -152,7 +153,7 @@ namespace BimilEngine.Source.GameLogic.Sprites
                 else
                     AnimationHandler.PlayAnimation("Left");
             }
-            else if (isKeyDownRight) // Moving right
+            else if (_canMoveHorizontally && isKeyDownRight) // Moving right
             {
                 Rigidbody2D.Body.LinearVelocity = new Vector2(MovementSpeed * 100 * deltaTime, Rigidbody2D.Body.LinearVelocity.Y);
                 _moveDirection = Vector2Direction.Right;
@@ -199,16 +200,13 @@ namespace BimilEngine.Source.GameLogic.Sprites
         public override void OnCollisionEnter2D(Fixture current, Fixture other, Contact contact)
         {
             LogManager.DoConsoleLog($"Collision Enter", LogLevel.Debug);
+
+            contact.Friction = 0f; // Use this to set the friction (e.g. 0f = the player should not stick to the wall)
         }
 
         public override void OnCollisionStay2D(Fixture current, Fixture other, Contact contact)
         {
             LogManager.DoConsoleLog($"Collision Stay", LogLevel.Debug);
-
-            // if (((Sprite2D)collision.OtherCollider.AssociatedGameObject).Tag == SpriteTags.Wall)
-            // {
-                
-            // }
         }
 
         public override void OnCollisionExit2D(Fixture current, Fixture other, Contact contact)

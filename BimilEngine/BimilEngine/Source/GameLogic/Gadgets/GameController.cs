@@ -114,6 +114,15 @@ namespace BimilEngine.Source.GameLogic.Gadgets
                 activeCamera.MatrixPosition += new Vector2(0, 0.1f) * deltaTime * 1000;
             }
 
+            if (keyboardState.IsKeyPressed(Keys.K))
+            {
+                Root.TimeScale = Root.TimeScale = 0.1f;
+            }
+            else if (keyboardState.IsKeyPressed(Keys.L))
+            {
+                Root.TimeScale = Root.TimeScale = 1;
+            }
+
             // ---------
             base.Update(gameTime);
         }
