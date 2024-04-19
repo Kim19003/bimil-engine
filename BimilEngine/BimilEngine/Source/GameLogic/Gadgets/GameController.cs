@@ -116,11 +116,11 @@ namespace BimilEngine.Source.GameLogic.Gadgets
 
             if (keyboardState.IsKeyPressed(Keys.K))
             {
-                Root.TimeScale = Root.TimeScale = 0.1f;
+                Root.TimeScale = 0.1f;
             }
             else if (keyboardState.IsKeyPressed(Keys.L))
             {
-                Root.TimeScale = Root.TimeScale = 1;
+                Root.TimeScale = 1;
             }
 
             // ---------
