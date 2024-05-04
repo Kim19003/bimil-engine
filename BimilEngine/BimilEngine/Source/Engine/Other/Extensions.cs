@@ -209,18 +209,18 @@ namespace BimilEngine.Source.Engine.Other
     public static class Vector2Extensions
     {
         /// <summary>
-        /// Multiplies the following vector by the caller vector.
+        /// Multiplies the following vector by the parent vector.
         /// </summary>
-        /// <returns>The following vector multiplied by the caller vector.</returns>
+        /// <returns>The following vector multiplied by the parent vector.</returns>
         public static Vector2 MultiplyFollowing(this Vector2 multiplier, Vector2 following)
         {
             return new(following.X * multiplier.X, following.Y * multiplier.Y);
         }
 
         /// <summary>
-        /// Divides the following vector by the caller vector.
+        /// Divides the following vector by the parent vector.
         /// </summary>
-        /// <returns>The following vector divided by the caller vector.</returns>
+        /// <returns>The following vector divided by the parent vector.</returns>
         public static Vector2 DivideFollowing(this Vector2 divider, Vector2 following)
         {
             Vector2 logicalScale = new(following.X / divider.X, following.Y / divider.Y);

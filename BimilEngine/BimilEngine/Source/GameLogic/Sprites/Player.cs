@@ -219,7 +219,7 @@ namespace BimilEngine.Source.GameLogic.Sprites
             LogManager.DoConsoleLog($"Trigger Enter", LogLevel.Debug);
 
             PhysicsSprite2D otherSprite = other.GetParent();
-            if (current.FixtureId == 1 && otherSprite.Tag == SpriteTags.Wall)
+            if (current.FixtureId == 1 && otherSprite.Tag == SpriteTags.WALL)
             {
                 IsGrounded = true;
                 _isJumping = false;
@@ -231,7 +231,7 @@ namespace BimilEngine.Source.GameLogic.Sprites
             LogManager.DoConsoleLog($"Trigger Exit", LogLevel.Debug);
 
             PhysicsSprite2D otherSprite = other.GetParent();
-            if (current.FixtureId == 1 && otherSprite.Tag == SpriteTags.Wall)
+            if (current.FixtureId == 1 && otherSprite.Tag == SpriteTags.WALL)
             {
                 IsGrounded = false;
                 _isJumping = true;

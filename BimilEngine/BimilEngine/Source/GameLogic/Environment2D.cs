@@ -253,18 +253,18 @@ namespace BimilEngine.Source.GameLogic
             main.AddSprites(new object[]
             {
                 new Player("Square Head Idle Gun Looking Right", textureSize.MultiplyFollowing(new(0, -2)),
-                    new(1), new(0.5f, 1.8f), mainCamera.CameraLevel, "Player", SpriteTags.Player),
+                    new(1), new(0.5f, 1.8f), mainCamera.CameraLevel, "Player", SpriteTags.PLAYER),
 
                 // new Wall("Grass P Mini", textureSize.Multiply(new(0, 0)),
-                //     new(1), new(1, 1), mainCamera.CameraLevel, "Wall 3", SpriteTags.Wall),
+                //     new(1), new(1, 1), mainCamera.CameraLevel, "Wall 3", SpriteTags.WALL),
 
                 // new Wall("Grass P Mini", textureSize.Multiply(new(-2, 0)),
-                //     new(1), new(1, 1), mainCamera.CameraLevel, "Wall 4", SpriteTags.Wall),
+                //     new(1), new(1, 1), mainCamera.CameraLevel, "Wall 4", SpriteTags.WALL),
 
                 // new Wall("Grass P Mini", textureSize.Multiply(new(2, 0)),
-                //     new(1), new(1, 1), mainCamera.CameraLevel, "Wall 5", SpriteTags.Wall),
+                //     new(1), new(1, 1), mainCamera.CameraLevel, "Wall 5", SpriteTags.WALL),
                     
-                // new Wall("Pixels/Black Pixel", new(mainCameraBounds.X, mainCameraBounds.Y + mainCameraBounds.Height - 50), new(mainCameraBounds.Width * 10, 100), mainCamera.CameraLevel, "Floor", SpriteTags.Wall),
+                // new Wall("Pixels/Black Pixel", new(mainCameraBounds.X, mainCameraBounds.Y + mainCameraBounds.Height - 50), new(mainCameraBounds.Width * 10, 100), mainCamera.CameraLevel, "Floor", SpriteTags.WALL),
             });
 
             Vector2 previousPosition = new(0, 0);
@@ -277,7 +277,7 @@ namespace BimilEngine.Source.GameLogic
                 else
                     newPosition = new Vector2(previousPosition.X + 2, previousPosition.Y - random.Next(-1, 2));
                 Wall wall = new("Grass P Mini", textureSize.MultiplyFollowing(newPosition),
-                    new(1), new(1, 1), mainCamera.CameraLevel, $"Wall {i + 1}", SpriteTags.Wall);
+                    new(1), new(1, 1), mainCamera.CameraLevel, $"Wall {i + 1}", SpriteTags.WALL);
                 main.AddSprite(wall);
                 previousPosition = newPosition;
             }

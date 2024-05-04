@@ -2,7 +2,7 @@ namespace BimilEngine.Source.GameLogic.Models
 {
     public static class SpriteTags
     {
-        public static readonly string Player = "Player";
-        public static readonly string Wall = "Wall";
+        public const string PLAYER = "Player";
+        public const string WALL = "Wall";
     }
 }
