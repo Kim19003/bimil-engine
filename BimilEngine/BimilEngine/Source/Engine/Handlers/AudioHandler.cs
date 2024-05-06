@@ -23,12 +23,25 @@ namespace BimilEngine.Source.Engine.Handlers
         
         private readonly HashSet<SoundEffectInstance> _createdSoundEffectInstances = new();
 
-        public void Play3DSoundEffect(string soundEffectId, Vector2 perceiverPosition, Vector2 sourcePosition)
+        public void PlaySong(string songId, bool isRepeating = true)
+        {
+            if (Songs.ContainsKey(songId))
+            {
+                MediaPlayer.IsRepeating = isRepeating;
+                MediaPlayer.Play(Songs[songId]);
+            }
+            else
+            {
+                throw new Exception($"Song with id '{songId}' does not exist");
+            }
+        }
+
+        public void PlaySoundEffect(string soundEffectId, Vector2 perceiverPosition, Vector2 sourcePosition)
         {
             Play3DSoundEffect(soundEffectId, new Vector3(perceiverPosition, 0), new Vector3(sourcePosition, 0));
         }
 
-        public void Play3DSoundEffect(string soundEffectId, Vector3 perceiverPosition, Vector3 sourcePosition)
+        private void Play3DSoundEffect(string soundEffectId, Vector3 perceiverPosition, Vector3 sourcePosition)
         {
             DisposeAllFinishedSoundEffectInstances();
 
