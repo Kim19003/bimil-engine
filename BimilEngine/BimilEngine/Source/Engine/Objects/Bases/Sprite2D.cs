@@ -5,9 +5,11 @@ using BimilEngine.Source.Engine.Interfaces;
 using BimilEngine.Source.Engine.Models;
 using IDrawable = BimilEngine.Source.Engine.Interfaces.IDrawable;
 using BimilEngine.Source.Engine.Handlers;
+using System;
 
 namespace BimilEngine.Source.Engine.Objects.Bases
 {
+    [Obsolete("This class is obsolete and will be removed in the future. Use PhysicsSprite2D instead.")]
     public abstract class Sprite2D : Transform2D, IStartable, IDrawable, IUpdatable, IDestroyable
     {
         /// <summary>
@@ -22,6 +24,16 @@ namespace BimilEngine.Source.Engine.Objects.Bases
         /// Sorting layer of the sprite.
         /// </summary>
         public float SortingLayer { get; set; } = 0f;
+        /// <summary>
+        /// Absolute position of the transform.
+        /// </summary>
+        public Vector2 AbsolutePosition
+        {
+            get
+            {
+                return Position * new Vector2(Texture.Width, Texture.Height);
+            }
+        }
 
         public Sprite2D(string textureName, Vector2 position, Vector2 scale, int cameraLevel = 0, string name = "", string tag = "", Scene2D associatedScene = null)
             : base(position, scale, cameraLevel, name, tag, associatedScene)
@@ -52,7 +64,7 @@ namespace BimilEngine.Source.Engine.Objects.Bases
             {
                 Vector2 origin = new(Texture.Width / 2, Texture.Height / 2);
 
-                Globals.SpriteBatch.Draw(Texture, Position, null, Color.White, Rotation, origin, Scale, SpriteEffects, SortingLayer);
+                Globals.SpriteBatch.Draw(Texture, AbsolutePosition, null, Color.White, Rotation, origin, Scale, SpriteEffects, SortingLayer);
             }
         }
 

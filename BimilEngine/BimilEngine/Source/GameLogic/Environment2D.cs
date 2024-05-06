@@ -3,7 +3,6 @@ using Microsoft.Xna.Framework;
 using BimilEngine.Source.GameLogic.Sprites;
 using BimilEngine.Source.GameLogic.Models;
 using BimilEngine.Source.Engine.Handlers;
-using BimilEngine.Source.Engine.Other;
 using BimilEngine.Source.Engine.Functions;
 using Genbox.VelcroPhysics.Dynamics;
 using BimilEngine.Source.Engine.Models;
@@ -245,14 +244,12 @@ namespace BimilEngine.Source.GameLogic
                 // },
             });
 
-            Vector2 textureSize = new(32, 32);
-
             Camera2D mainCamera = (Camera2D)main.Gadgets.FirstOrDefault(s => s is Camera2D camera && camera.Name == "Main Camera");
             Rectangle mainCameraBounds = mainCamera.WorldPointBounds;
 
             main.AddSprites(new object[]
             {
-                new Player("Square Head Idle Gun Looking Right", textureSize.MultiplyFollowing(new(0, -2)),
+                new Player("Square Head Idle Gun Looking Right", new(0, -2),
                     new(1), new(0.5f, 1.8f), mainCamera.CameraLevel, "Player", SpriteTags.PLAYER),
 
                 // new Wall("Grass P Mini", textureSize.Multiply(new(0, 0)),
@@ -276,7 +273,7 @@ namespace BimilEngine.Source.GameLogic
                     newPosition = new(0, 0);
                 else
                     newPosition = new Vector2(previousPosition.X + 2, previousPosition.Y - random.Next(-1, 2));
-                Wall wall = new("Grass P Mini", textureSize.MultiplyFollowing(newPosition),
+                Wall wall = new("Grass P Mini", newPosition,
                     new(1), new(1, 1), mainCamera.CameraLevel, $"Wall {i + 1}", SpriteTags.WALL);
                 main.AddSprite(wall);
                 previousPosition = newPosition;
@@ -336,7 +333,7 @@ namespace BimilEngine.Source.GameLogic
         public static void LoadScene(string sceneName, bool resetScenes = true)
         {
             if (_sceneHandler != null && _sceneHandler.Scenes.Any() && !_sceneHandler.Scenes.Any(scene => scene.Name == sceneName))
-                throw new System.Exception($"Scene with name {sceneName} does not exist");
+                throw new Exception($"Scene with name {sceneName} does not exist");
 
             if (resetScenes)
                 CreateScenes(); // This creates/resets the scenes
@@ -350,7 +347,7 @@ namespace BimilEngine.Source.GameLogic
         public static void LoadScene(Scene2D scene, bool resetScenes = true)
         {
             if (_sceneHandler != null && _sceneHandler.Scenes.Any() && !_sceneHandler.Scenes.Any(s => s == scene))
-                throw new System.Exception($"Scene with name {scene.Name} does not exist");
+                throw new Exception($"Scene with name {scene.Name} does not exist");
 
             if (resetScenes)
                 CreateScenes(); // This creates/resets the scenes

@@ -39,7 +39,7 @@ namespace BimilEngine.Source.GameLogic.Sprites
             Rigidbody2D = new(this, Environment2D.PhysicsWorld.CreateBody(new()
                 {
                     Type = BodyType.Dynamic,
-                    Position = position,
+                    Position = AbsolutePosition,
                     // FixedRotation = true,
                     GravityScale = 4f
                 })

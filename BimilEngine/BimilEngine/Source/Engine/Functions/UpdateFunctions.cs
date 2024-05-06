@@ -7,6 +7,7 @@ using BimilEngine.Source.Engine.Interfaces;
 using BimilEngine.Source.Engine.Objects.Bases;
 using BimilEngine.Source.GameLogic;
 using BimilEngine.Source.Engine.Models;
+using BimilEngine.Source.Engine.Managers;
 
 namespace BimilEngine.Source.Engine.Functions
 {
@@ -91,9 +92,15 @@ namespace BimilEngine.Source.Engine.Functions
                 // Update the sprite values if it is a physics sprite
                 if (sprite is PhysicsSprite2D physicsSprite)
                 {
-                    physicsSprite.LastPosition = physicsSprite.Position;
+                    if (physicsSprite.Rigidbody2D == null)
+                    {
+                        LogManager.DoConsoleLog($"PUA: PhysicsSprite2D '{physicsSprite.Name}' has no Rigidbody2D, so it's position and rotation can't be updated based on that.", LogLevel.Warning);
+                        continue;
+                    }
+
+                    physicsSprite.LastAbsolutePosition = physicsSprite.AbsolutePosition;
                     physicsSprite.LastRotation = physicsSprite.Rotation;
-                    Vector2 newPosition = physicsSprite.Rigidbody2D.Body.Position;
+                    Vector2 newAbsolutePosition = physicsSprite.Rigidbody2D.Body.Position;
                     float newRotation = physicsSprite.Rigidbody2D.Body.Rotation;
 
                     if (physicsSprite.Interpolation == Interpolation2D.Interpolate)
@@ -101,14 +108,14 @@ namespace BimilEngine.Source.Engine.Functions
                         float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
                         float interpolationAlpha = MathHelper.Clamp(deltaTime / PhysicsSprite2D.INTERPOLATION_HOTSPOT, 0.0f, 1.0f);
 
-                        Vector2 position = Vector2.Lerp(physicsSprite.LastPosition, newPosition, interpolationAlpha);
-                        physicsSprite.Position = position;
+                        Vector2 absolutePosition = Vector2.Lerp(physicsSprite.LastAbsolutePosition, newAbsolutePosition, interpolationAlpha);
+                        physicsSprite.Position = absolutePosition / new Vector2(physicsSprite.Texture.Width, physicsSprite.Texture.Height);
                         float rotation = MathHelper.Lerp(physicsSprite.LastRotation, newRotation, interpolationAlpha);
                         physicsSprite.Rotation = rotation;
                     }
                     else
                     {
-                        physicsSprite.Position = newPosition;
+                        physicsSprite.Position = newAbsolutePosition / new Vector2(physicsSprite.Texture.Width, physicsSprite.Texture.Height);
                         physicsSprite.Rotation = newRotation;
                     }
                 }

@@ -45,9 +45,19 @@ namespace BimilEngine.Source.Engine.Objects.Bases
         /// </summary>
         public const float INTERPOLATION_HOTSPOT = 0.03f;
         /// <summary>
+        /// Absolute position of the transform.
+        /// </summary>
+        public Vector2 AbsolutePosition
+        {
+            get
+            {
+                return Position * new Vector2(Texture.Width, Texture.Height);
+            }
+        }
+        /// <summary>
         /// Last position of the transform, mainly used for position interpolation. You should not modify this value.
         /// </summary>
-        public Vector2 LastPosition { get; set; } = Vector2.Zero;
+        public Vector2 LastAbsolutePosition { get; set; } = Vector2.Zero;
         /// <summary>
         /// Last rotation of the transform, mainly used for rotation interpolation. You should not modify this value.
         /// </summary>
@@ -60,7 +70,7 @@ namespace BimilEngine.Source.Engine.Objects.Bases
             get
             {
                 float interpolationAlpha = Root.InterpolationAlpha;
-                return Vector2.Lerp(LastPosition, Position, interpolationAlpha);
+                return Vector2.Lerp(LastAbsolutePosition, AbsolutePosition, interpolationAlpha);
             }
         }
         /// <summary>
@@ -197,7 +207,7 @@ namespace BimilEngine.Source.Engine.Objects.Bases
                 }
                 else
                 {
-                    position = Position;
+                    position = AbsolutePosition;
                     rotation = Rotation;
                 }
 

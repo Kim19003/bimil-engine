@@ -18,7 +18,7 @@ namespace BimilEngine.Source.GameLogic.Sprites
             Rigidbody2D = new(this, Environment2D.PhysicsWorld.CreateBody(new()
                 {
                     Type = BodyType.Kinematic,
-                    Position = position,
+                    Position = AbsolutePosition,
                 })
             );
             Vertices rectangleVertices = new()
