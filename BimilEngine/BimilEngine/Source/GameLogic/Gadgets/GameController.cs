@@ -7,6 +7,8 @@ using Microsoft.Xna.Framework.Input;
 using System.Linq;
 using BimilEngine.Source.Engine.Other;
 using System.Runtime.Serialization;
+using BimilEngine.Source.Engine.Handlers;
+using BimilEngine.Source.Engine;
 
 namespace BimilEngine.Source.GameLogic.Gadgets
 {
@@ -19,6 +21,10 @@ namespace BimilEngine.Source.GameLogic.Gadgets
 
         public override void Start()
         {
+            if (!Environment2D.AudioHandler.Songs.ContainsKey("Main Theme"))
+                Environment2D.AudioHandler.Songs.Add("Main Theme", Globals.SongBatch["Main Theme"]);
+            Environment2D.AudioHandler.PlaySong("Main Theme");
+
             // ---------
             base.Start();
         }

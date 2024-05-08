@@ -4,6 +4,8 @@ using Microsoft.Xna.Framework.Graphics;
 using BimilEngine.Source.Engine.Managers;
 using BimilEngine.Source.Engine.Models;
 using System.Collections.Generic;
+using Microsoft.Xna.Framework.Media;
+using Microsoft.Xna.Framework.Audio;
 
 namespace BimilEngine.Source.Engine
 {
@@ -60,6 +62,32 @@ namespace BimilEngine.Source.Engine
             }
         }
         private static Dictionary<string, Texture2D> _textureBatch = null;
+
+        public static Dictionary<string, Song> SongBatch
+        {
+            get => _songBatch;
+            set
+            {
+                if (_songBatch == null)
+                    _songBatch = value;
+                else
+                    LogManager.DoConsoleLog("SongBatch already set!", LogLevel.Error);
+            }
+        }
+        private static Dictionary<string, Song> _songBatch = null;
+
+        public static Dictionary<string, SoundEffect> SoundEffectBatch
+        {
+            get => _soundEffectBatch;
+            set
+            {
+                if (_soundEffectBatch == null)
+                    _soundEffectBatch = value;
+                else
+                    LogManager.DoConsoleLog("SoundEffectBatch already set!", LogLevel.Error);
+            }
+        }
+        private static Dictionary<string, SoundEffect> _soundEffectBatch = null;
 
         public static Texture2D PixelTexture
         {

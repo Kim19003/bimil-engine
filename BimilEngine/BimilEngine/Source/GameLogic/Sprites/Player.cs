@@ -71,7 +71,7 @@ namespace BimilEngine.Source.GameLogic.Sprites
 
         public override void Start()
         {
-            AssociatedScene.AddOrUpdateDraw(new(Rigidbody2D.Body, Color.GreenYellow, cameraLevel: CameraLevel));
+            // AssociatedScene.AddOrUpdateDraw(new(Rigidbody2D.Body, Color.GreenYellow, cameraLevel: CameraLevel));
             // AssociatedScene.AddOrUpdateDraw(new(bodyDrawShape, cameraLevel: Environment2D.ActiveScene.ActiveCameras.First().CameraLevel));
 
             Animation left = new(new DuratedTexture(TimeSpan.FromSeconds(1), Globals.TextureBatch["Square Head Idle Gun Looking Left"]));
@@ -86,6 +86,9 @@ namespace BimilEngine.Source.GameLogic.Sprites
                 ("Right", right ),
                 ("Right Up", rightUp )
             });
+
+            if (!Environment2D.AudioHandler.SoundEffects.ContainsKey("Jump"))
+                Environment2D.AudioHandler.SoundEffects.Add("Jump", Globals.SoundEffectBatch["Jump"]);
 
             // ---------
             base.Start();
@@ -184,6 +187,8 @@ namespace BimilEngine.Source.GameLogic.Sprites
             if (IsGrounded && isKeyPressedUp) // Jumping
             {
                 Rigidbody2D.Body.LinearVelocity = new Vector2(Rigidbody2D.Body.LinearVelocity.X, -JumpPower);
+                Environment2D.AudioHandler.PlaySoundEffect("Jump", InterpolatedDrawPosition, Vector2.Zero);
+
                 _isJumping = true;
             }
 

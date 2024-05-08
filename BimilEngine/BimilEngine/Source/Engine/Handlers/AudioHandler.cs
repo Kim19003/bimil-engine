@@ -21,7 +21,7 @@ namespace BimilEngine.Source.Engine.Handlers
         private readonly AudioListener _audioListener = new();
         private readonly AudioEmitter _audioEmitter = new();
         
-        private readonly HashSet<SoundEffectInstance> _createdSoundEffectInstances = new();
+        private readonly Dictionary<SoundEffect, SoundEffectInstance> _soundEffectInstances = new();
 
         public void PlaySong(string songId, bool isRepeating = true)
         {
@@ -43,17 +43,20 @@ namespace BimilEngine.Source.Engine.Handlers
 
         private void Play3DSoundEffect(string soundEffectId, Vector3 perceiverPosition, Vector3 sourcePosition)
         {
-            DisposeAllFinishedSoundEffectInstances();
-
             if (SoundEffects.ContainsKey(soundEffectId))
             {
-                SoundEffectInstance soundEffectInstance = SoundEffects[soundEffectId].CreateInstance();
+                SoundEffect soundEffect = SoundEffects[soundEffectId];
+                SoundEffectInstance soundEffectInstance = _soundEffectInstances.ContainsKey(soundEffect)
+                    ? _soundEffectInstances[soundEffect]
+                    : soundEffect.CreateInstance();
+
                 _audioListener.Position = perceiverPosition;
                 _audioEmitter.Position = sourcePosition;
                 soundEffectInstance.Apply3D(_audioListener, _audioEmitter);
                 soundEffectInstance.Play();
 
-                _createdSoundEffectInstances.Add(soundEffectInstance);
+                if (!_soundEffectInstances.ContainsKey(soundEffect))
+                    _soundEffectInstances.Add(soundEffect, soundEffectInstance);
                 _audioListener.Position = Vector3.Zero;
                 _audioEmitter.Position = Vector3.Zero;
             }
@@ -63,27 +66,16 @@ namespace BimilEngine.Source.Engine.Handlers
             }
         }
 
-        private void DisposeAllFinishedSoundEffectInstances()
-        {
-            IEnumerable<SoundEffectInstance> finishedSoundEffectInstances = _createdSoundEffectInstances.Where(x => x.State == SoundState.Stopped);
-            
-            foreach (SoundEffectInstance finishedSoundEffectInstance in finishedSoundEffectInstances)
-            {
-                finishedSoundEffectInstance.Dispose();
-                _createdSoundEffectInstances.Remove(finishedSoundEffectInstance);
-            }
-        }
-
         public void Dispose()
         {
-            foreach (SoundEffectInstance soundEffectInstance in _createdSoundEffectInstances)
-            {
-                soundEffectInstance.Dispose();
-            }
-
             foreach (Song song in Songs.Values)
             {
                 song.Dispose();
+            }
+
+            foreach (var soundEffectInstance in _soundEffectInstances)
+            {
+                soundEffectInstance.Value.Dispose();
             }
 
             foreach (SoundEffect soundEffect in SoundEffects.Values)

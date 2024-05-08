@@ -14,6 +14,8 @@ using BimilEngine.Source.Engine.Managers;
 using Genbox.VelcroPhysics;
 using BimilEngine.Source.GameLogic.Gadgets;
 using System;
+using Microsoft.Xna.Framework.Media;
+using Microsoft.Xna.Framework.Audio;
 
 namespace BimilEngine.Source.GameLogic
 {
@@ -119,6 +121,18 @@ namespace BimilEngine.Source.GameLogic
                 { "Grass P Mini", Globals.Content.Load<Texture2D>("Textures/Grass P Mini") },
                 { "Lava Middle", Globals.Content.Load<Texture2D>("Textures/Lava Middle") },
                 { "Wall Middle", Globals.Content.Load<Texture2D>("Textures/Wall Middle") },
+            };
+
+            // Load songs
+            Globals.SongBatch = new()
+            {
+                { "Main Theme", Globals.Content.Load<Song>("Audio/theme") },
+            };
+
+            // Load sound effects
+            Globals.SoundEffectBatch = new()
+            {
+                { "Jump", Globals.Content.Load<SoundEffect>("Audio/jump") },
             };
 
             // Load the starting scene
