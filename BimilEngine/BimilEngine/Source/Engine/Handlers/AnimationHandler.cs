@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using BimilEngine.Source.Engine.Models;
-using Boolean = BimilEngine.Source.Engine.Other.Boolean;
+using BimilEngine.Source.Engine.Other;
 
 namespace BimilEngine.Source.Engine.Handlers
 {
@@ -107,7 +107,7 @@ namespace BimilEngine.Source.Engine.Handlers
         /// </summary>
         public Animation[] GetOngoingAnimations()
         {
-            return Animations.Values.Where(animation => animation.IsPlaying && Boolean.IsNullOrFalse(animation.HasFinished)).ToArray();
+            return Animations.Values.Where(animation => animation.IsPlaying && BooleanExtensions.IsNullOrFalse(animation.HasFinished)).ToArray();
         }
 
         public void Dispose()

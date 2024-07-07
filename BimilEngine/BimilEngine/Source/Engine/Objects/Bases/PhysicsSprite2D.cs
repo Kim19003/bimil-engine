@@ -165,11 +165,11 @@ namespace BimilEngine.Source.Engine.Objects.Bases
                     TimeSpan duration = ongoingAnimation.DuratedTextures.ElementAt(i).Duration; // Duration of the current texture
 
                     if (!_ongoingTextureDraws.ContainsKey(ongoingAnimation)) // If the whole animation is not yet started
-                        _ongoingTextureDraws.Add(ongoingAnimation, (texture, totalElapsedTime)); // Start drawing the current texture
+                        _ongoingTextureDraws.Add(ongoingAnimation, (texture, totalElapsedTime)); // -> Start drawing the current texture
                     else if (_ongoingTextureDraws[ongoingAnimation] == null) // If the animation's previous texture draw has finished
-                        _ongoingTextureDraws[ongoingAnimation] = (texture, totalElapsedTime); // Start drawing the current texture
+                        _ongoingTextureDraws[ongoingAnimation] = (texture, totalElapsedTime); // -> Start drawing the current texture
                     else if (_ongoingTextureDraws[ongoingAnimation].Value.Texture != texture) // If there is an ongoing texture draw
-                        continue; // Skip drawing the current texture
+                        continue; // -> Skip drawing the current texture
 
                     DrawTexture(texture, gameTime, Interpolation); // Draw it
 

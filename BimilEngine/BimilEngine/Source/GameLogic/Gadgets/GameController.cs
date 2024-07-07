@@ -23,7 +23,7 @@ namespace BimilEngine.Source.GameLogic.Gadgets
         {
             if (!Environment2D.AudioHandler.Songs.ContainsKey("Main Theme"))
                 Environment2D.AudioHandler.Songs.Add("Main Theme", Globals.SongBatch["Main Theme"]);
-            Environment2D.AudioHandler.PlaySong("Main Theme");
+            // Environment2D.AudioHandler.PlaySong("Main Theme");
 
             // ---------
             base.Start();

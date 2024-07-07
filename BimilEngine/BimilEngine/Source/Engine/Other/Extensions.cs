@@ -253,7 +253,7 @@ namespace BimilEngine.Source.Engine.Other
         }
     }
 
-    public static class Boolean
+    public static class BooleanExtensions
     {
         public static bool IsNullOrTrue(bool? value)
         {
