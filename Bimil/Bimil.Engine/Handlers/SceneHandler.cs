@@ -4,6 +4,7 @@ using System.Linq;
 using Bimil.Engine.Managers;
 using Bimil.Engine.Models;
 using Bimil.Engine.Objects;
+using Bimil.Engine.Objects.Bases;
 
 namespace Bimil.Engine.Handlers
 {
@@ -41,18 +42,18 @@ namespace Bimil.Engine.Handlers
             .ToArray();
 
         /// <summary>
-        /// Scene creation action. Invoked, when the scene is loaded.
+        /// Initialize scenes action. Invoked, when a scene is loaded.
         /// </summary>
-        public Action SceneCreationAction { get; set; }
+        public Action InitializeScenesAction { get; set; }
 
         public SceneHandler()
         {
 
         }
 
-        public SceneHandler(Action sceneCreationAction)
+        public SceneHandler(Action initializeScenesAction)
         {
-            SceneCreationAction = sceneCreationAction;
+            InitializeScenesAction = initializeScenesAction;
         }
 
         /// <summary>
@@ -103,29 +104,18 @@ namespace Bimil.Engine.Handlers
         }
 
         /// <summary>
-        /// Set the active scene by name.
-        /// </summary>
-        private void SetActiveScene(string sceneName)
-        {
-            if (!_scenes.Any(scene => scene.Name == sceneName))
-                throw new Exception($"Scene with name {sceneName} does not exist");
-
-            _activeScene = _scenes.FirstOrDefault(scene => scene.Name == sceneName);
-        }
-
-        /// <summary>
         /// Load a scene by name.
         /// </summary>
         public void LoadScene(string sceneName)
         {
             if (_scenes.Any() && !_scenes.Any(scene => scene.Name == sceneName))
                 throw new Exception($"Scene with name {sceneName} does not exist");
-            else if (SceneCreationAction == null)
+            else if (InitializeScenesAction == null)
                 throw new NullReferenceException("The scene creation action is null!");
 
-            SceneCreationAction.Invoke();
+            InitializeScenesAction.Invoke();
 
-            SetActiveScene(sceneName);
+            SetActiveSceneAndBuildIt(sceneName);
         }
 
         /// <summary>
@@ -135,23 +125,40 @@ namespace Bimil.Engine.Handlers
         {
             if (_scenes.Any() && !_scenes.Any(s => s == scene))
                 throw new Exception($"Scene with name {scene.Name} does not exist");
-            else if (SceneCreationAction == null)
+            else if (InitializeScenesAction == null)
                 throw new NullReferenceException("The scene creation action is null!");
 
-            SceneCreationAction.Invoke();
+            InitializeScenesAction.Invoke();
 
-            SetActiveScene(scene);
+            SetActiveSceneAndBuildIt(scene);
         }
 
         /// <summary>
-        /// Set the active scene by reference.
+        /// Set the active scene by name and build it.
         /// </summary>
-        private void SetActiveScene(Scene2D scene)
+        private void SetActiveSceneAndBuildIt(string sceneName)
+        {
+            if (!_scenes.Any(scene => scene.Name == sceneName))
+                throw new Exception($"Scene with name {sceneName} does not exist");
+
+            Scene2D foundScene = _scenes.FirstOrDefault(scene => scene.Name == sceneName);
+            foundScene.Build();
+
+            _activeScene = foundScene;
+        }
+
+        /// <summary>
+        /// Set the active scene by reference and build it.
+        /// </summary>
+        private void SetActiveSceneAndBuildIt(Scene2D scene)
         {
             if (!_scenes.Any(s => s == scene))
                 throw new Exception($"Scene with name {scene.Name} does not exist");
 
-            _activeScene = _scenes.FirstOrDefault(s => s == scene);
+            Scene2D foundScene = _scenes.FirstOrDefault(s => s == scene);
+            foundScene.Build();
+
+            _activeScene = _scenes.FirstOrDefault(s => s == foundScene);
         }
 
         /// <summary>
@@ -163,7 +170,7 @@ namespace Bimil.Engine.Handlers
             _activeScene = null;
 
             if (resetSceneCreationAction)
-                SceneCreationAction = null;
+                InitializeScenesAction = null;
         }
     }
 }

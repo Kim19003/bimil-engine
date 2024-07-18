@@ -3,7 +3,6 @@ using Genbox.VelcroPhysics.Definitions;
 using Genbox.VelcroPhysics.Dynamics;
 using Genbox.VelcroPhysics.Shared;
 using Microsoft.Xna.Framework;
-using Bimil.Engine.Objects;
 using Bimil.Engine.Objects.Bases;
 using Bimil.Engine.Handlers;
 using Bimil.Engine;
@@ -22,7 +21,7 @@ namespace Bimil.Game.Sprites
             Name = name;
             Tag = tag;
 
-            Rigidbody2D = new(this, Root.EngineCore.PhysicsWorld.CreateBody(new()
+            Rigidbody2D = new(this, Root.Core.PhysicsWorld.CreateBody(new()
                 {
                     Type = BodyType.Kinematic,
                     Position = AbsolutePosition,

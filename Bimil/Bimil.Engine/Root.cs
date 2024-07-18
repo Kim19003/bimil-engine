@@ -11,7 +11,8 @@ namespace Bimil.Engine
 {
     public static class Root
     {
-        public static EngineCore EngineCore { get; internal set; }
+        public static Core Core { get; internal set; }
+        public static Settings Settings { get; } = new();
 
         public static GraphicsDeviceManager Graphics
         {

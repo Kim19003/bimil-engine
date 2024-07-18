@@ -8,10 +8,11 @@ using Microsoft.Xna.Framework.Graphics;
 using Bimil.Engine.Objects;
 using Bimil.Engine.Managers;
 using System;
+using Bimil.Engine.Objects.Bases;
 
 namespace Bimil.Engine
 {
-    public class EngineCore : Game
+    public class Core : Game
     {
         /// <summary>
         /// Handler, that handles everything screen related.
@@ -43,7 +44,7 @@ namespace Bimil.Engine
         /// <summary>
         /// The fixed update time step of the game.
         /// </summary>
-        public static float FixedUpdateTimeStep => 1 / Settings.PhysicsHertz;
+        public static float FixedUpdateTimeStep => 1 / Root.Settings.PhysicsHertz;
         /// <summary>
         /// The update time step of the game.
         /// </summary>
@@ -66,7 +67,7 @@ namespace Bimil.Engine
         /// </summary>
         public bool IsFirstUpdateCall { get; protected set; } = true;
 
-        public EngineCore()
+        public Core()
         {
             Root.Graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
@@ -78,7 +79,7 @@ namespace Bimil.Engine
             // Tip: Use ScreenHandler.UseVsync to control the VSync
             // Tip: Use ScreenHandler.MaxFramesPerSecond to control the FPS limit
 
-            Root.EngineCore = this;
+            Root.Core = this;
         }
 
         /// <summary>
@@ -87,9 +88,9 @@ namespace Bimil.Engine
         protected override void Initialize()
         {
             // Initialize graphics
-            ScreenHandler.Width = Settings.DefaultScreenWidth;
-            ScreenHandler.Height = Settings.DefaultScreenHeight;
-            ScreenHandler.MaxFramesPerSecond = Settings.DefaultMaxFPS;
+            ScreenHandler.Width = Root.Settings.DefaultScreenWidth;
+            ScreenHandler.Height = Root.Settings.DefaultScreenHeight;
+            ScreenHandler.MaxFramesPerSecond = Root.Settings.DefaultMaxFPS;
             ScreenHandler.UseVsync = true;
             ScreenHandler.ApplyChanges();
 
@@ -102,12 +103,12 @@ namespace Bimil.Engine
             Root.TransparentTexture = transparentTexture;
 
             // Set physics world settings
-            Genbox.VelcroPhysics.Settings.PositionIterations = Settings.Physics.PositionIterations;
-            Genbox.VelcroPhysics.Settings.VelocityIterations = Settings.Physics.VelocityIterations;
-            Genbox.VelcroPhysics.Settings.MaxTranslation = Settings.Physics.MaxTranslation;
+            Genbox.VelcroPhysics.Settings.PositionIterations = Root.Settings.Physics.PositionIterations;
+            Genbox.VelcroPhysics.Settings.VelocityIterations = Root.Settings.Physics.VelocityIterations;
+            Genbox.VelcroPhysics.Settings.MaxTranslation = Root.Settings.Physics.MaxTranslation;
 
             // Set other stuff
-            SceneHandler.SceneCreationAction = CreateScenes;
+            SceneHandler.InitializeScenesAction = InitializeScenes;
 
             // ---------
             base.Initialize();
@@ -223,7 +224,7 @@ namespace Bimil.Engine
         /// </summary>
         private void FixedUpdate(GameTime gameTime, GameTime fixedGameTime)
         {
-            PhysicsWorld.Gravity = Settings.PhysicsWorldGravity;
+            PhysicsWorld.Gravity = Root.Settings.PhysicsWorldGravity;
             PhysicsWorld.Step(FixedUpdateTimeStep);
             UpdateFunctions.HandleFixedUpdate(SceneHandler, gameTime, fixedGameTime);
         }
@@ -267,25 +268,28 @@ namespace Bimil.Engine
             DrawFunctions.DrawGrid(gridSettings);
         }
 
-        private void CreateScenes()
+        /// <summary>
+        /// Initialize all the scenes.
+        /// </summary>
+        private void InitializeScenes()
         {
-            ReinstantiateThings();
+            StartOver();
 
-            OnSceneCreation.Invoke();
+            OnSceneInitialization.Invoke();
         }
 
-        public delegate void OnSceneCreationHandler();
-        public OnSceneCreationHandler OnSceneCreation { get; set; }
+        public delegate void OnSceneInitializationHandler();
+        public OnSceneInitializationHandler OnSceneInitialization { get; set; }
 
         /// <summary>
-        /// Re-instantiate things. To-be called at the start of scene creation.
+        /// Start the engine over. This is, for example, called at the start of scene initialization.
         /// </summary>
-        private void ReinstantiateThings()
+        private void StartOver()
         {
             SceneHandler.Reset();
             GridSettings.Camera = null;
 
-            PhysicsWorld = new(Settings.PhysicsWorldGravity);
+            PhysicsWorld = new(Root.Settings.PhysicsWorldGravity);
             LogManager.ClearShownScreenLogs();
 
             IsFirstUpdateCall = true;

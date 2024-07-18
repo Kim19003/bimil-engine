@@ -57,7 +57,7 @@ namespace Bimil.Engine.Managers
         {
             get
             {
-                Camera2D camera = Root.EngineCore.ActiveScene.ActiveCameras.FirstOrDefault();
+                Camera2D camera = Root.Core.ActiveScene.ActiveCameras.FirstOrDefault();
                 Rectangle cameraScreenPointBounds = camera.Viewport.Bounds;
                 return new(cameraScreenPointBounds.X + 20, cameraScreenPointBounds.Y + cameraScreenPointBounds.Height - 40);
             }
@@ -78,7 +78,7 @@ namespace Bimil.Engine.Managers
                 int firstLogKey = ShownScreenLogs.Keys.Min();
                 Log firstLog = ShownScreenLogs[firstLogKey];
 
-                Root.EngineCore.ActiveScene.RemoveDraw(new(firstLog, Color.White));
+                Root.Core.ActiveScene.RemoveDraw(new(firstLog, Color.White));
                 ShownScreenLogs.Remove(firstLogKey);
 
                 ShownScreenLogs.RearrangeSequence(logScreenStartPosition, ShownLogVerticalSpacing);
@@ -106,7 +106,7 @@ namespace Bimil.Engine.Managers
                 _ => Color.White
             };
 
-            Root.EngineCore.ActiveScene.AddOrUpdateDraw(new(thisLog, logColor, lifeTime > 0 ? lifeTime : 0));
+            Root.Core.ActiveScene.AddOrUpdateDraw(new(thisLog, logColor, lifeTime > 0 ? lifeTime : 0));
             
             _screenLogs.Add(thisLog);
 
@@ -189,10 +189,10 @@ namespace Bimil.Engine.Managers
 
         public static void ClearShownScreenLogs()
         {
-            if (Root.EngineCore.ActiveScene != null)
+            if (Root.Core.ActiveScene != null)
             {
-                Draw[] logDraws = Root.EngineCore.ActiveScene.Draws.Where(dw => dw.Object is Log).ToArray();
-                Root.EngineCore.ActiveScene.RemoveDraws(logDraws);
+                Draw[] logDraws = Root.Core.ActiveScene.Draws.Where(dw => dw.Object is Log).ToArray();
+                Root.Core.ActiveScene.RemoveDraws(logDraws);
             }
 
             ShownScreenLogs.Clear();

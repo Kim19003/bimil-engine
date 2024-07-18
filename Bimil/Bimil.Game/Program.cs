@@ -1,6 +1,6 @@
 ﻿using Bimil.Engine;
 using Bimil.Game;
 
-using EngineCore engine = new();
-GameCore.Build();
+using Bimil.Engine.Core engine = new();
+Bimil.Game.Core.Build();
 engine.Run();

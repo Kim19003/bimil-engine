@@ -69,7 +69,7 @@ namespace Bimil.Engine.Objects.Bases
         {
             get
             {
-                float interpolationAlpha = Root.EngineCore.InterpolationAlpha;
+                float interpolationAlpha = Root.Core.InterpolationAlpha;
                 return Vector2.Lerp(LastAbsolutePosition, AbsolutePosition, interpolationAlpha);
             }
         }
@@ -80,7 +80,7 @@ namespace Bimil.Engine.Objects.Bases
         {
             get
             {
-                float interpolationAlpha = Root.EngineCore.InterpolationAlpha;
+                float interpolationAlpha = Root.Core.InterpolationAlpha;
                 return MathHelper.Lerp(LastRotation, Rotation, interpolationAlpha);
             }
         }

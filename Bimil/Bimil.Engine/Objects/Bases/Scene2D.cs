@@ -3,11 +3,10 @@ using System.Linq;
 using Bimil.Engine.Interfaces;
 using Bimil.Engine.Managers;
 using Bimil.Engine.Models;
-using Bimil.Engine.Objects.Bases;
 
-namespace Bimil.Engine.Objects
+namespace Bimil.Engine.Objects.Bases
 {
-    public class Scene2D
+    public abstract class Scene2D
     {
         /// <summary>
         /// Name of the scene.
@@ -18,17 +17,17 @@ namespace Bimil.Engine.Objects
         /// Gadgets collection. Use the AddGadget(s) and RemoveGadget(s) methods to add and remove gadgets.
         /// </summary>
         public IReadOnlyCollection<object> Gadgets => _gadgets;
-        private readonly HashSet<object> _gadgets = new();
+        protected readonly HashSet<object> _gadgets = new();
         /// <summary>
         /// Sprites collection. Use the AddSprite(s) and RemoveSprite(s) methods to add and remove sprites.
         /// </summary>
         public IReadOnlyCollection<object> Sprites => _sprites;
-        private readonly HashSet<object> _sprites = new();
+        protected readonly HashSet<object> _sprites = new();
         /// <summary>
         /// Debug draws collection. Use the AddDraw(s) and RemoveDraw(s) methods to add and remove draws.
         /// </summary>
         public IReadOnlyCollection<Draw> Draws => _draws;
-        private readonly HashSet<Draw> _draws = new();
+        protected readonly HashSet<Draw> _draws = new();
         // Components
         // TODO: Add component collections if needed
 
@@ -261,5 +260,10 @@ namespace Bimil.Engine.Objects
                 RemoveActiveCamera(camera);
             }
         }
+
+        /// <summary>
+        /// Build the scene.
+        /// </summary>
+        public abstract void Build();
     }
 }

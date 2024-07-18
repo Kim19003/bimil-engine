@@ -36,7 +36,7 @@ namespace Bimil.Game.Sprites
         {
             Position = position;
 
-            Rigidbody2D = new(this, Root.EngineCore.PhysicsWorld.CreateBody(new()
+            Rigidbody2D = new(this, Root.Core.PhysicsWorld.CreateBody(new()
                 {
                     Type = BodyType.Dynamic,
                     Position = AbsolutePosition,
@@ -89,8 +89,8 @@ namespace Bimil.Game.Sprites
                 ("Right Up", rightUp )
             });
 
-            if (!Root.EngineCore.AudioHandler.SoundEffects.ContainsKey("Jump"))
-                Root.EngineCore.AudioHandler.SoundEffects.Add("Jump", Root.SoundEffectBatch["Jump"]);
+            if (!Root.Core.AudioHandler.SoundEffects.ContainsKey("Jump"))
+                Root.Core.AudioHandler.SoundEffects.Add("Jump", Root.SoundEffectBatch["Jump"]);
 
             // ---------
             base.Start();
@@ -105,7 +105,7 @@ namespace Bimil.Game.Sprites
             //     bodyDrawShape.Body = new(bodyDrawShape.Body.X, bodyDrawShape.Body.Y - 1, bodyDrawShape.Body.Width, bodyDrawShape.Body.Height);
             // }
 
-            Camera2D activeCamera = Root.EngineCore.ActiveScene.ActiveCameras.FirstOrDefault();
+            Camera2D activeCamera = Root.Core.ActiveScene.ActiveCameras.FirstOrDefault();
             activeCamera.MatrixPosition = InterpolatedDrawPosition;
 
             // _rayCastShape.Start = InterpolatedDrawPosition;
