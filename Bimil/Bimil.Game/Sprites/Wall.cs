@@ -52,15 +52,15 @@ namespace Bimil.Game.Sprites
         private const float delay = 0.01f;
         public override void FixedUpdate(GameTime gameTime, GameTime fixedGameTime)
         {
-            // float deltaTime = (float)fixedGameTime.ElapsedGameTime.TotalSeconds;
-            // elapsedTime += deltaTime;
+            float deltaTime = (float)fixedGameTime.ElapsedGameTime.TotalSeconds;
+            elapsedTime += deltaTime;
 
-            // if (elapsedTime >= delay)
-            // {
-            //     Rigidbody2D.Body.LinearVelocity = new Vector2(20 * 100 * deltaTime, Rigidbody2D.Body.LinearVelocity.Y);
+            if (elapsedTime >= delay)
+            {
+                Rigidbody2D.Body.LinearVelocity = new Vector2(20, Rigidbody2D.Body.LinearVelocity.Y);
                 
-            //     elapsedTime = 0f;
-            // }
+                elapsedTime = 0f;
+            }
 
             // ---------
             base.FixedUpdate(gameTime, fixedGameTime);

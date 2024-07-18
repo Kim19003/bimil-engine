@@ -118,6 +118,7 @@ namespace Bimil.Game.Sprites
 
         bool _canMoveHorizontally = true;
         Vector2 _moveDirection = Vector2.Zero;
+        bool _isMoving = false;
         bool _isJumping = false;
         public override void FixedUpdate(GameTime gameTime, GameTime fixedGameTime)
         {
@@ -157,6 +158,8 @@ namespace Bimil.Game.Sprites
                     AnimationHandler.PlayAnimation("Left Up");
                 else
                     AnimationHandler.PlayAnimation("Left");
+
+                _isMoving = true;
             }
             else if (_canMoveHorizontally && isKeyDownRight) // Moving right
             {
@@ -166,6 +169,8 @@ namespace Bimil.Game.Sprites
                     AnimationHandler.PlayAnimation("Right Up");
                 else
                     AnimationHandler.PlayAnimation("Right");
+
+                _isMoving = true;
             }
             else // Not moving left or right
             {
@@ -184,6 +189,8 @@ namespace Bimil.Game.Sprites
                     else if (_moveDirection == Direction2D.Right)
                         AnimationHandler.PlayAnimation("Right");
                 }
+
+                _isMoving = false;
             }
 
             if (IsGrounded && isKeyPressedUp) // Jumping
@@ -206,24 +213,24 @@ namespace Bimil.Game.Sprites
 
         public override void OnCollisionEnter2D(Fixture current, Fixture other, Contact contact)
         {
-            LogManager.DoConsoleLog($"Collision Enter", LogLevel.Debug);
+            // LogManager.DoConsoleLog($"Collision Enter", LogLevel.Debug);
 
             contact.Friction = 0f; // Use this to set the friction (e.g. 0f = the player should not stick to the wall)
         }
 
         public override void OnCollisionStay2D(Fixture current, Fixture other, Contact contact)
         {
-            LogManager.DoConsoleLog($"Collision Stay", LogLevel.Debug);
+            // LogManager.DoConsoleLog($"Collision Stay", LogLevel.Debug);
         }
 
         public override void OnCollisionExit2D(Fixture current, Fixture other, Contact contact)
         {
-            LogManager.DoConsoleLog($"Collision Exit", LogLevel.Debug);
+            // LogManager.DoConsoleLog($"Collision Exit", LogLevel.Debug);
         }
 
         public override void OnTriggerEnter2D(Fixture current, Fixture other, Contact contact)
         {
-            LogManager.DoConsoleLog($"Trigger Enter", LogLevel.Debug);
+            // LogManager.DoConsoleLog($"Trigger Enter", LogLevel.Debug);
 
             PhysicsSprite2D otherSprite = other.GetParent();
             if (current.FixtureId == 1 && otherSprite.Tag == SpriteTags.WALL)
@@ -233,9 +240,20 @@ namespace Bimil.Game.Sprites
             }
         }
 
+        public override void OnTriggerStay2D(Fixture current, Fixture other, Contact contact)
+        {
+            // LogManager.DoConsoleLog($"Trigger stay", LogLevel.Debug);
+
+            PhysicsSprite2D otherSprite = other.GetParent();
+            if (current.FixtureId == 1 && otherSprite.Tag == SpriteTags.WALL && !_isJumping && !_isMoving)
+            {
+                Rigidbody2D.Body.LinearVelocity = otherSprite.Rigidbody2D.Body.LinearVelocity;
+            }
+        }
+
         public override void OnTriggerExit2D(Fixture current, Fixture other, Contact contact)
         {
-            LogManager.DoConsoleLog($"Trigger Exit", LogLevel.Debug);
+            // LogManager.DoConsoleLog($"Trigger Exit", LogLevel.Debug);
 
             PhysicsSprite2D otherSprite = other.GetParent();
             if (current.FixtureId == 1 && otherSprite.Tag == SpriteTags.WALL)

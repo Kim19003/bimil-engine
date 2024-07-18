@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using Bimil.Engine;
+using Bimil.Engine.Managers;
 using Bimil.Engine.Models;
 using Bimil.Engine.Objects;
 using Bimil.Engine.Objects.Bases;
@@ -9,6 +10,7 @@ using Bimil.Game.Models;
 using Bimil.Game.Sprites;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Object = Bimil.Game.Sprites.Object;
 
 namespace Bimil.Game.Scenes
 {
@@ -32,7 +34,7 @@ namespace Bimil.Game.Scenes
                     CameraLevel = 0,
                     Name = "Main Camera",
                     Depth = 2,
-                    SortMode = SpriteSortMode.Deferred,
+                    SortMode = SpriteSortMode.BackToFront,
                     BlendState = BlendState.AlphaBlend,
                     SamplerState = SamplerState.PointClamp,
                 },
@@ -86,6 +88,29 @@ namespace Bimil.Game.Scenes
                 AddSprite(wall);
                 previousPosition = newPosition;
             }
+
+            previousPosition = new(0, 0);
+            for (int i = 0; i < 200; i++)
+            {
+                Vector2 newPosition;
+                if (i == 0)
+                    newPosition = new(0, 0);
+                else
+                    newPosition = new Vector2(previousPosition.X + 64, previousPosition.Y - random.Next(-64, 64));
+                Object sprite = new("Black Pixel", newPosition)
+                {
+                    Scale = new(16),
+                    CameraLevel = mainCamera.CameraLevel,
+                    Interpolation = Interpolation2D.None,
+                    SortingLayer = 1,
+                };
+                AddSprite(sprite);
+                previousPosition = newPosition;
+            }
+
+            // LogManager.EnableScreenLogging = false;
+            LogManager.EnableConsoleLogging = false;
+            LogManager.EnableFileLogging = false;
 
             // Camera2D secondCamera = (Camera2D)Gadgets.FirstOrDefault(s => s is Camera2D camera && camera.Name == "Second Camera");
 
