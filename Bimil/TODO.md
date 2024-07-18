@@ -6,7 +6,7 @@
 
 24.2.2024
 
-- [ ] Make the Bimil.Engine as it's own project (use internals, etc)
+- [x] Make the Bimil.Engine as it's own project (use internals, etc)
 
 11.2.2024
 
