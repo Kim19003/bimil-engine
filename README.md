@@ -14,5 +14,5 @@
 
 #### New features
 
-- [x] Make the Bimil.Engine as it's own project (use internals, etc).
+- [x] Create better architecture (Bimil.Engine and Bimil.Game as own projects).
 - [x] Create better scene creation logic.
