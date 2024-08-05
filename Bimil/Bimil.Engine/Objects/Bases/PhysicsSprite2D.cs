@@ -45,7 +45,7 @@ namespace Bimil.Engine.Objects.Bases
         /// </summary>
         public const float INTERPOLATION_HOTSPOT = 0.03f;
         /// <summary>
-        /// Absolute position of the transform.
+        /// Absolute position of the transform (current position multiplied by the texture size).
         /// </summary>
         public Vector2 AbsolutePosition
         {

@@ -170,8 +170,8 @@ namespace Bimil.Engine.Functions
                     case Log log:
                         HandleLogDraw(activeScene, log, cameraLevelDraw.Color, cameraLevelDraw.LifeTime, gameTime);
                         break;
-                    case Body body:
-                        HandleBodyDraw(cameraLevelDraw.LineThickness, body, cameraLevelDraw.Color);
+                    case Fixture fixture:
+                        HandleFixtureDraw(cameraLevelDraw.LineThickness, fixture, cameraLevelDraw.Color);
                         break;
                     case Camera2D camera:
                         HandleCameraDraw(cameraLevelDraw.CameraLevel, cameraLevelDraw.LineThickness, camera, cameraLevelDraw.Color);
@@ -179,7 +179,7 @@ namespace Bimil.Engine.Functions
                     case DrawShapeBase drawShape:
                         HandleDrawShapeDraw(drawShape);
                         break;
-                    // TODO: Add more debug drawing logic here if needed
+                    // TODO: Add more debug drawing logic here if needed (if so, also create a constructor for it in the Draw class)
                 }
             }
 
@@ -244,27 +244,26 @@ namespace Bimil.Engine.Functions
             Root.SpriteBatch.DrawString(Root.LogFont, log.Message, log.Position, color);
         }
 
-        private static void HandleBodyDraw(float lineThickness, Body body, Color color)
+        private static void HandleFixtureDraw(float lineThickness, Fixture fixture, Color color)
         {
-            foreach (Fixture fixture in body.FixtureList)
+            Body body = fixture.Body;
+
+            switch (fixture.Shape)
             {
-                switch (fixture.Shape)
-                {
-                    case PolygonShape polygonShape:
-                        List<Vector2> vertices = new();
-                        foreach (Vector2 vertex in polygonShape.Vertices)
-                        {
-                            vertices.Add(body.Position + vertex);
-                        }
-                        Root.SpriteBatch.DrawPolygon(new(vertices.ToArray(), color, lineThickness));
-                        break;
-                    case CircleShape circleShape:
-                        Vector2 position = body.Position + circleShape.Position;
-                        Circle circle = new(Helpers.ConvertToPoint(position), (int)circleShape.Radius);
-                        Root.SpriteBatch.DrawCircle(new(circle, color, lineThickness));
-                        break;
-                    // TODO: Add more shapes here if needed
-                }
+                case PolygonShape polygonShape:
+                    List<Vector2> vertices = new();
+                    foreach (Vector2 vertex in polygonShape.Vertices)
+                    {
+                        vertices.Add(body.Position + vertex);
+                    }
+                    Root.SpriteBatch.DrawPolygon(new(vertices.ToArray(), color, lineThickness));
+                    break;
+                case CircleShape circleShape:
+                    Vector2 position = body.Position + circleShape.Position;
+                    Circle circle = new(Helpers.ConvertToPoint(position), (int)circleShape.Radius);
+                    Root.SpriteBatch.DrawCircle(new(circle, color, lineThickness));
+                    break;
+                // TODO: Add more shapes here if needed
             }
         }
 

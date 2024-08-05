@@ -62,6 +62,7 @@ namespace Bimil.Game.Sprites
             Rigidbody2D.Body.IsBullet = true; // Use this to make the body a bullet (enable CCD)
             Rigidbody2D.Body.FixedRotation = true; // Use this to make the body not rotate
             // Rigidbody2D.Body.AngularVelocity = 0.5f; // Use this to set the angular (rotation) velocity
+            // Interpolation = Interpolation2D.None; // Use this to set the interpolation mode
 
             // Body.IsSensor = true; // Use this to make the body a trigger
 
@@ -109,9 +110,9 @@ namespace Bimil.Game.Sprites
             Camera2D activeCamera = Root.Core.ActiveScene.ActiveCameras.FirstOrDefault();
             activeCamera.MatrixPosition = InterpolatedDrawPosition;
 
-            // _rayCastShape.Start = InterpolatedDrawPosition;
-            // _rayCastShape.End = InterpolatedDrawPosition + _rayCastDirection;
-            // AssociatedScene.AddOrUpdateDraw(new(_rayCastShape, cameraLevel: 0));
+            _rayCastShape.Start = InterpolatedDrawPosition;
+            _rayCastShape.End = InterpolatedDrawPosition + _rayCastDirection;
+            AssociatedScene.AddOrUpdateDraw(new(_rayCastShape, cameraLevel: 0));
 
             // ---------
             base.Update(gameTime);

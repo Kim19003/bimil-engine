@@ -1,4 +1,6 @@
 using Bimil.Engine.Models.DrawShapes;
+using Bimil.Engine.Objects;
+using Genbox.VelcroPhysics.Dynamics;
 using Microsoft.Xna.Framework;
 
 namespace Bimil.Engine.Models
@@ -68,9 +70,19 @@ namespace Bimil.Engine.Models
         }
         private float _lineThickness = 0f;
 
-        public Draw(object @object, Color color, int lifeTime = 0, int cameraLevel = -1, float lineThickness = 1f)
+        public Draw(Log log, Color color, int lifeTime = 0, int cameraLevel = -1, float lineThickness = 1f)
         {
-            Initializer(@object, color, lifeTime, cameraLevel, lineThickness);
+            Initializer(log, color, lifeTime, cameraLevel, lineThickness);
+        }
+
+        public Draw(Fixture fixture, Color color, int lifeTime = 0, int cameraLevel = -1, float lineThickness = 1f)
+        {
+            Initializer(fixture, color, lifeTime, cameraLevel, lineThickness);
+        }
+
+        public Draw(Camera2D camera, Color color, int lifeTime = 0, int cameraLevel = -1, float lineThickness = 1f)
+        {
+            Initializer(camera, color, lifeTime, cameraLevel, lineThickness);
         }
 
         public Draw(RectangleDrawShape rectangleDrawShape, int lifeTime = 0, int cameraLevel = -1)

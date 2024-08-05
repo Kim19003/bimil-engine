@@ -10,7 +10,7 @@ using Bimil.Game.Gadgets;
 using Bimil.Game.Sprites;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Object = Bimil.Game.Sprites.Object;
+using SomeObject = Bimil.Game.Sprites.SomeObject;
 
 namespace Bimil.Game.Scenes
 {
@@ -90,14 +90,14 @@ namespace Bimil.Game.Scenes
             }
 
             previousPosition = new(0, 0);
-            for (int i = 0; i < 1; i++)
+            for (int i = 0; i < 10; i++)
             {
                 Vector2 newPosition;
                 if (i == 0)
                     newPosition = new(0, 0);
                 else
                     newPosition = new Vector2(previousPosition.X + 64, previousPosition.Y - random.Next(-64, 64));
-                Object sprite = new("Black Pixel", newPosition)
+                SomeObject sprite = new("Black Pixel", newPosition)
                 {
                     Scale = new(16),
                     CameraLevel = mainCamera.CameraLevel,

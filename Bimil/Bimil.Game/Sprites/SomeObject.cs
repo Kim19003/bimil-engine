@@ -12,12 +12,13 @@ using Bimil.Engine.Managers;
 using Bimil.Engine.Models;
 using Bimil.Game.Constants;
 using Bimil.Engine.Other.Extensions;
+using System.Linq;
 
 namespace Bimil.Game.Sprites
 {
-    public class Object : PhysicsSprite2D
+    public class SomeObject : PhysicsSprite2D
     {
-        public Object(string textureName, Vector2 position, Scene2D associatedScene = null)
+        public SomeObject(string textureName, Vector2 position, Scene2D associatedScene = null)
             : base(textureName, associatedScene)
         {
             Position = position;
@@ -37,6 +38,8 @@ namespace Bimil.Game.Sprites
 
         public override void Update(GameTime gameTime)
         {
+            AssociatedScene.AddOrUpdateDraw(new(Rigidbody2D.Body.FixtureList.First(), Color.Red, 0));
+
             // ---------
             base.Update(gameTime);
         }
@@ -60,7 +63,7 @@ namespace Bimil.Game.Sprites
             PhysicsSprite2D otherSprite = other.GetParentOfBody();
             if (otherSprite is Player player && other.GetName() == Identifiers.PLAYER_BODY)
             {
-                player.Destroy();
+                // player.Destroy();
                 LogManager.DoScreenLog("Player destroyed", shadowSettings: new(new Vector2(1, 1), new(0, 0, 0, 0.75f)));
             }
         }

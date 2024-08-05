@@ -32,5 +32,21 @@ namespace Bimil.Engine.Other.Extensions
         {
             return ((BodyUserData)body?.UserData)?.Tag;
         }
+
+        /// <summary>
+        /// Finds a fixture by name.
+        /// </summary>
+        /// <param name="name">The name of the fixture to find.</param>
+        /// <returns>If found, the fixture. Otherwise, null.</returns>
+        public static Fixture FindFixtureByName(this Body body, string name)
+        {
+            foreach (Fixture fixture in body.FixtureList)
+            {
+                if (fixture.GetName() == name)
+                    return fixture;
+            }
+
+            return null;
+        }
     }
 }
