@@ -14,6 +14,7 @@ using IDrawable = Bimil.Engine.Interfaces.IDrawable;
 using System;
 using Bimil.Engine.Models.DrawShapes;
 using Bimil.Engine.Interfaces;
+using Bimil.Engine.Other.Extensions;
 
 namespace Bimil.Engine.Functions
 {

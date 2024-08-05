@@ -1,4 +1,4 @@
-namespace Bimil.Game.Models
+namespace Bimil.Game.Constants
 {
     public static class SpriteTags
     {

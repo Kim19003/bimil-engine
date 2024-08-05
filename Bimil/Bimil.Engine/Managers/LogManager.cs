@@ -5,7 +5,7 @@ using System.Linq;
 using Microsoft.Xna.Framework;
 using Bimil.Engine.Models;
 using Bimil.Engine.Objects;
-using Bimil.Engine.Other;
+using Bimil.Engine.Other.Extensions;
 
 namespace Bimil.Engine.Managers
 {

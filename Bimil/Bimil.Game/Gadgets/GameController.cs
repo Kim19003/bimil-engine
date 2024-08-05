@@ -5,9 +5,9 @@ using Bimil.Engine.Models;
 using Bimil.Engine.Managers;
 using Microsoft.Xna.Framework.Input;
 using System.Linq;
-using Bimil.Engine.Other;
 using Bimil.Engine;
 using Bimil.Game.Scenes;
+using Bimil.Engine.Other.Extensions;
 
 namespace Bimil.Game.Gadgets
 {

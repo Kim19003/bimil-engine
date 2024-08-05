@@ -1,11 +1,7 @@
-using System;
-using System.Linq;
 using Bimil.Engine;
-using Bimil.Engine.Models;
 using Bimil.Engine.Objects;
 using Bimil.Engine.Objects.Bases;
-using Bimil.Game.Gadgets;
-using Bimil.Game.Models;
+using Bimil.Game.Constants;
 using Bimil.Game.Sprites;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;

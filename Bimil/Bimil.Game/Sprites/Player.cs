@@ -5,20 +5,19 @@ using Genbox.VelcroPhysics.Shared;
 using Genbox.VelcroPhysics.Utilities;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
-using Bimil.Engine.Managers;
 using Bimil.Engine.Models;
 using Bimil.Engine.Objects;
 using Bimil.Engine.Objects.Bases;
-using Bimil.Engine.Other;
 using Vector2 = Microsoft.Xna.Framework.Vector2;
 using Genbox.VelcroPhysics.Collision.ContactSystem;
 using Bimil.Engine.Interfaces;
 using Bimil.Engine.Handlers;
 using Bimil.Engine;
 using System;
-using Bimil.Game.Models;
 using Bimil.Engine.Models.DrawShapes;
 using System.Linq;
+using Bimil.Game.Constants;
+using Bimil.Engine.Other.Extensions;
 
 namespace Bimil.Game.Sprites
 {
@@ -48,11 +47,13 @@ namespace Bimil.Game.Sprites
             Rigidbody2D.Body.CreateFixture(new FixtureDef()
             {
                 Shape = new PolygonShape(rectangleVertices, 1f),
+                UserData = new FixtureUserData(Identifiers.PLAYER_BODY)
             });
             Rigidbody2D.Body.CreateFixture(new FixtureDef()
             {
                 Shape = new CircleShape(5, 0f, new Vector2(0, 13)),
-                IsSensor = true
+                IsSensor = true,
+                UserData = new FixtureUserData(Identifiers.GROUND_SENSOR)
             });
 
             // Rigidbody2D.Body.Restitution = 1f; // Bounciness
@@ -232,7 +233,7 @@ namespace Bimil.Game.Sprites
         {
             // LogManager.DoConsoleLog($"Trigger Enter", LogLevel.Debug);
 
-            PhysicsSprite2D otherSprite = other.GetParent();
+            PhysicsSprite2D otherSprite = other.GetParentOfBody();
             if (current.FixtureId == 1 && otherSprite.Tag == SpriteTags.WALL)
             {
                 IsGrounded = true;
@@ -244,7 +245,7 @@ namespace Bimil.Game.Sprites
         {
             // LogManager.DoConsoleLog($"Trigger stay", LogLevel.Debug);
 
-            PhysicsSprite2D otherSprite = other.GetParent();
+            PhysicsSprite2D otherSprite = other.GetParentOfBody();
             if (current.FixtureId == 1 && otherSprite.Tag == SpriteTags.WALL && !_isJumping && !_isMoving)
             {
                 Rigidbody2D.Body.LinearVelocity = otherSprite.Rigidbody2D.Body.LinearVelocity;
@@ -255,7 +256,7 @@ namespace Bimil.Game.Sprites
         {
             // LogManager.DoConsoleLog($"Trigger Exit", LogLevel.Debug);
 
-            PhysicsSprite2D otherSprite = other.GetParent();
+            PhysicsSprite2D otherSprite = other.GetParentOfBody();
             if (current.FixtureId == 1 && otherSprite.Tag == SpriteTags.WALL)
             {
                 IsGrounded = false;

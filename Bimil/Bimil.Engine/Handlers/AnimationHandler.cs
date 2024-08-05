@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Bimil.Engine.Models;
-using Bimil.Engine.Other;
+using Bimil.Engine.Other.Extensions;
 
 namespace Bimil.Engine.Handlers
 {

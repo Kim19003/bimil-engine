@@ -27,7 +27,10 @@ namespace Bimil.Engine.Models
             _parent = parent;
             _body = body;
 
-            _body.UserData = _parent;
+            _body.UserData = new BodyUserData()
+            {
+                Parent = _parent
+            };
 
             _body.OnCollision += _parent.CollisionEnterHandler;
             _body.OnSeparation += _parent.CollisionExitHandler;

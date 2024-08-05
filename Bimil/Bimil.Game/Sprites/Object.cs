@@ -7,9 +7,11 @@ using Genbox.VelcroPhysics.Shared;
 using Genbox.VelcroPhysics.Definitions;
 using Genbox.VelcroPhysics.Collision.Shapes;
 using Genbox.VelcroPhysics.Collision.ContactSystem;
-using Bimil.Engine.Other;
 using Genbox.VelcroPhysics.Utilities;
 using Bimil.Engine.Managers;
+using Bimil.Engine.Models;
+using Bimil.Game.Constants;
+using Bimil.Engine.Other.Extensions;
 
 namespace Bimil.Game.Sprites
 {
@@ -55,8 +57,8 @@ namespace Bimil.Game.Sprites
 
         public override void OnCollisionEnter2D(Fixture current, Fixture other, Contact contact)
         {
-            PhysicsSprite2D otherSprite = other.GetParent();
-            if (otherSprite is Player player)
+            PhysicsSprite2D otherSprite = other.GetParentOfBody();
+            if (otherSprite is Player player && other.GetName() == Identifiers.PLAYER_BODY)
             {
                 player.Destroy();
                 LogManager.DoScreenLog("Player destroyed", shadowSettings: new(new Vector2(1, 1), new(0, 0, 0, 0.75f)));
