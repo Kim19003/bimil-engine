@@ -193,16 +193,27 @@ namespace Bimil.Engine.Functions
 
             if (_logDrawTimes.ContainsKey(log))
             {
-                bool logUpdated = _logDrawTimes[log].LogMirror.Message != log.Message
-                    || _logDrawTimes[log].LogMirror.Level != log.Level
-                    || _logDrawTimes[log].LogMirror.Time != log.Time
-                    || _logDrawTimes[log].LogMirror.Type != log.Type
-                    || _logDrawTimes[log].LogMirror.Position != log.Position;
+                bool isMessageDifferent = _logDrawTimes[log].LogMirror.Message != log.Message;
+                bool isLevelDifferent = _logDrawTimes[log].LogMirror.Level != log.Level;
+                bool isTimeDifferent = _logDrawTimes[log].LogMirror.Time != log.Time;
+                bool isTypeDifferent = _logDrawTimes[log].LogMirror.Type != log.Type;
+                bool isPositionDifferent = _logDrawTimes[log].LogMirror.Position != log.Position;
 
-                if (logUpdated || lifeTime != _logDrawTimes[log].LifeTime) // Update the log if it or it's lifetime has changed
+                bool logUpdated = isMessageDifferent || isLevelDifferent || isTimeDifferent || isTypeDifferent || isPositionDifferent;
+
+                bool lifeTimeChanged = lifeTime != _logDrawTimes[log].LifeTime;
+                if (logUpdated || lifeTimeChanged) // Update the log if it or it's lifetime has changed
                 {
                     Log logMirror = new(log.Message, log.Level, log.Time, log.Type, log.Position);
-                    _logDrawTimes[log] = (logMirror, totalElapsedMilliseconds, lifeTime, totalElapsedMilliseconds + lifeTime);
+
+                    float newLifeTime = lifeTimeChanged
+                        ? lifeTime
+                        : _logDrawTimes[log].LifeTime;
+                    float newTotalLifeTime = lifeTimeChanged
+                        ? totalElapsedMilliseconds + lifeTime
+                        : _logDrawTimes[log].TotalLifeTime;
+
+                    _logDrawTimes[log] = (logMirror, totalElapsedMilliseconds, newLifeTime, newTotalLifeTime);
                 }
                 else
                 {
