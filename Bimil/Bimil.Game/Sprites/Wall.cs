@@ -39,7 +39,7 @@ namespace Bimil.Game.Sprites
                 Shape = new PolygonShape(rectangleVertices, 1f),
             });
 
-            Rigidbody2D.Body.IgnoreCCD = true;
+            // Rigidbody2D.Body.IgnoreCCD = true;
         }
 
         public override void Update(GameTime gameTime)

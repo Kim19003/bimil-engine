@@ -227,6 +227,55 @@ namespace Bimil.Engine.Other
 
             return logicalScale;
         }
+
+        /// <summary>
+        /// Subtracts the specified vector from the current vector and updates the current vector.
+        /// </summary>
+        /// <param name="vector">The vector to be updated.</param>
+        /// <param name="value">The vector to subtract from the current vector.</param>
+        public static void Subtract(this Vector2 vector, Vector2 value)
+        {
+            vector.X -= value.X;
+            vector.Y -= value.Y;
+        }
+
+        /// <summary>
+        /// Adds the specified vector to the current vector and updates the current vector.
+        /// </summary>
+        /// <param name="vector">The vector to be updated.</param>
+        /// <param name="value">The vector to add to the current vector.</param>
+        public static void Add(this Vector2 vector, Vector2 value)
+        {
+            vector.X += value.X;
+            vector.Y += value.Y;
+        }
+
+        /// <summary>
+        /// Multiplies the current vector by the specified vector and updates the current vector.
+        /// </summary>
+        /// <param name="vector">The vector to be updated.</param>
+        /// <param name="value">The vector to multiply with the current vector.</param>
+        public static void Scale(this Vector2 vector, Vector2 value)
+        {
+            vector.X *= value.X;
+            vector.Y *= value.Y;
+        }
+
+        /// <summary>
+        /// Divides the current vector by the specified vector and updates the current vector.
+        /// </summary>
+        /// <param name="vector">The vector to be updated.</param>
+        /// <param name="value">The vector to divide the current vector by.</param>
+        /// <exception cref="DivideByZeroException">Thrown when any component of the divisor vector is zero.</exception>
+        public static void DivideInPlace(this Vector2 vector, Vector2 value)
+        {
+            if (value.X == 0 || value.Y == 0)
+            {
+                throw new DivideByZeroException("Cannot divide by a vector with zero components.");
+            }
+            vector.X /= value.X;
+            vector.Y /= value.Y;
+        }
     }
 
     public static class BodyExtensions

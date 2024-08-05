@@ -39,31 +39,31 @@ namespace Bimil.Game.Gadgets
             KeyboardState keyboardState = Keyboard.GetState();
             Camera2D activeCamera = Root.Core.ActiveScene.ActiveCameras.FirstOrDefault();
 
-            if (isDebug)
-            {
-                ShadowSettings shadowSettings = new(new Vector2(1, 1), new(0, 0, 0, 0.75f));
+            // if (isDebug)
+            // {
+            //     ShadowSettings shadowSettings = new(new Vector2(1, 1), new(0, 0, 0, 0.75f));
 
-                if (log2 == null)
-                    log2 = LogManager.DoScreenLog($"FPS: {Root.Core.ScreenHandler.FramesPerSecondInt}", LogLevel.Information, 0, shadowSettings);
-                else
-                    log2.Message = $"FPS: {Root.Core.ScreenHandler.FramesPerSecondInt}";
+            //     if (log2 == null)
+            //         log2 = LogManager.DoScreenLog($"FPS: {Root.Core.ScreenHandler.FramesPerSecondInt}", LogLevel.Information, 0, shadowSettings);
+            //     else
+            //         log2.Message = $"FPS: {Root.Core.ScreenHandler.FramesPerSecondInt}";
 
-                if (log1 == null)
-                    log1 = LogManager.DoScreenLog($"Camera depth: {activeCamera.Depth}", LogLevel.Error, 0, shadowSettings);
-                else
-                    log1.Message = $"Camera depth: {activeCamera.Depth}";
+            //     if (log1 == null)
+            //         log1 = LogManager.DoScreenLog($"Camera depth: {activeCamera.Depth}", LogLevel.Error, 0, shadowSettings);
+            //     else
+            //         log1.Message = $"Camera depth: {activeCamera.Depth}";
 
-                Root.Core.GridSettings.CellSize = new(32, 32);
-                // Root.EngineCore.GridSettings.SizeMultiplier = 10;
-                Root.Core.GridSettings.Enabled = true;
-            }
-            else
-            {
-                LogManager.ClearShownScreenLogs();
-                log1 = null;
-                log2 = null;
-                Root.Core.GridSettings.Enabled = false;
-            }
+            //     Root.Core.GridSettings.CellSize = new(32, 32);
+            //     // Root.EngineCore.GridSettings.SizeMultiplier = 10;
+            //     Root.Core.GridSettings.Enabled = true;
+            // }
+            // else
+            // {
+            //     LogManager.ClearShownScreenLogs();
+            //     log1 = null;
+            //     log2 = null;
+            //     Root.Core.GridSettings.Enabled = false;
+            // }
 
             if (keyboardState.IsKeyPressed(Keys.R))
                 Root.Core.SceneHandler.LoadScene(nameof(Main));

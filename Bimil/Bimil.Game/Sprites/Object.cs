@@ -1,6 +1,15 @@
 using Microsoft.Xna.Framework;
 using Bimil.Engine.Objects.Bases;
 using Bimil.Engine.Handlers;
+using Bimil.Engine;
+using Genbox.VelcroPhysics.Dynamics;
+using Genbox.VelcroPhysics.Shared;
+using Genbox.VelcroPhysics.Definitions;
+using Genbox.VelcroPhysics.Collision.Shapes;
+using Genbox.VelcroPhysics.Collision.ContactSystem;
+using Bimil.Engine.Other;
+using Genbox.VelcroPhysics.Utilities;
+using Bimil.Engine.Managers;
 
 namespace Bimil.Game.Sprites
 {
@@ -10,6 +19,18 @@ namespace Bimil.Game.Sprites
             : base(textureName, associatedScene)
         {
             Position = position;
+
+            Rigidbody2D = new(this, Root.Core.PhysicsWorld.CreateBody(new()
+                {
+                    Type = BodyType.Kinematic,
+                    Position = AbsolutePosition,
+                })
+            );
+            Vertices rectangleVertices = PolygonUtils.CreateRectangle(8, 8);
+            Rigidbody2D.Body.CreateFixture(new FixtureDef()
+            {
+                Shape = new PolygonShape(rectangleVertices, 1f),
+            });
         }
 
         public override void Update(GameTime gameTime)
@@ -30,6 +51,16 @@ namespace Bimil.Game.Sprites
 
             // ---------
             base.Draw(gameTime, animationHandler);
+        }
+
+        public override void OnCollisionEnter2D(Fixture current, Fixture other, Contact contact)
+        {
+            PhysicsSprite2D otherSprite = other.GetParent();
+            if (otherSprite is Player player)
+            {
+                player.Destroy();
+                LogManager.DoScreenLog("Player destroyed", shadowSettings: new(new Vector2(1, 1), new(0, 0, 0, 0.75f)));
+            }
         }
     }
 }

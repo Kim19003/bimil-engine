@@ -90,7 +90,7 @@ namespace Bimil.Game.Scenes
             }
 
             previousPosition = new(0, 0);
-            for (int i = 0; i < 200; i++)
+            for (int i = 0; i < 1; i++)
             {
                 Vector2 newPosition;
                 if (i == 0)
