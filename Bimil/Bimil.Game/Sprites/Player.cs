@@ -110,9 +110,11 @@ namespace Bimil.Game.Sprites
             Camera2D activeCamera = Root.Core.ActiveScene.ActiveCameras.FirstOrDefault();
             activeCamera.MatrixPosition = InterpolatedDrawPosition;
 
-            _rayCastShape.Start = InterpolatedDrawPosition;
-            _rayCastShape.End = InterpolatedDrawPosition + _rayCastDirection;
-            AssociatedScene.AddOrUpdateDraw(new(_rayCastShape, cameraLevel: 0));
+            // _rayCastShape.Start = InterpolatedDrawPosition;
+            // _rayCastShape.End = InterpolatedDrawPosition + _rayCastDirection;
+            // AssociatedScene.AddOrUpdateDraw(new(_rayCastShape, cameraLevel: 0));
+
+            // AssociatedScene.AddOrUpdateDraw(new(Rigidbody2D.Body.FixtureList.First(), Color.Green, cameraLevel: 0));
 
             // ---------
             base.Update(gameTime);

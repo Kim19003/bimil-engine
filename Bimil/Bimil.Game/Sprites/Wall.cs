@@ -6,6 +6,7 @@ using Microsoft.Xna.Framework;
 using Bimil.Engine.Objects.Bases;
 using Bimil.Engine.Handlers;
 using Bimil.Engine;
+using System.Linq;
 
 namespace Bimil.Game.Sprites
 {
@@ -44,6 +45,8 @@ namespace Bimil.Game.Sprites
 
         public override void Update(GameTime gameTime)
         {
+            // AssociatedScene.AddOrUpdateDraw(new(Rigidbody2D.Body.FixtureList.First(), Color.Orange, cameraLevel: 0));
+
             // ---------
             base.Update(gameTime);
         }

@@ -29,7 +29,7 @@ namespace Bimil.Game.Sprites
                     Position = AbsolutePosition,
                 })
             );
-            Vertices rectangleVertices = PolygonUtils.CreateRectangle(8, 8);
+            Vertices rectangleVertices = PolygonUtils.CreateRectangle(16, 16);
             Rigidbody2D.Body.CreateFixture(new FixtureDef()
             {
                 Shape = new PolygonShape(rectangleVertices, 1f),
@@ -38,7 +38,7 @@ namespace Bimil.Game.Sprites
 
         public override void Update(GameTime gameTime)
         {
-            AssociatedScene.AddOrUpdateDraw(new(Rigidbody2D.Body.FixtureList.First(), Color.Red, 0));
+            // AssociatedScene.AddOrUpdateDraw(new(Rigidbody2D.Body.FixtureList.First(), Color.Blue, cameraLevel: 0));
 
             // ---------
             base.Update(gameTime);
@@ -63,8 +63,8 @@ namespace Bimil.Game.Sprites
             PhysicsSprite2D otherSprite = other.GetParentOfBody();
             if (otherSprite is Player player && other.GetName() == Identifiers.PLAYER_BODY)
             {
-                // player.Destroy();
-                LogManager.DoScreenLog("Player destroyed", shadowSettings: new(new Vector2(1, 1), new(0, 0, 0, 0.75f)));
+                player.Destroy();
+                LogManager.DoScreenLog("Player destroyed!", LogLevel.Error, shadowSettings: new(new Vector2(1, 1), new(0, 0, 0, 0.75f)));
             }
         }
     }

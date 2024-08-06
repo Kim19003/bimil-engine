@@ -246,8 +246,8 @@ namespace Bimil.Engine.Functions
 
         private static void HandleFixtureDraw(float lineThickness, Fixture fixture, Color color)
         {
-            Body body = fixture.Body;
-
+            Body body = fixture.Body ?? throw new Exception("The fixture is not attached to a body");
+            
             switch (fixture.Shape)
             {
                 case PolygonShape polygonShape:

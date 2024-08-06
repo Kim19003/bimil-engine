@@ -233,6 +233,7 @@ namespace Bimil.Engine.Objects.Bases
         {
             if (spriteReference is IPhysics2D physics2D)
             {
+                physics2D.Rigidbody2D.Destroy();
                 physics2D.Rigidbody2D = null;
             }
             // TODO: Add more logic here if needed

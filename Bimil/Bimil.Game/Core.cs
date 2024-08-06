@@ -54,8 +54,7 @@ namespace Bimil.Game
                 { "Square Head Idle Gun Looking Left", Root.Content.Load<Texture2D>("Textures/Square Head Idle Gun Looking Left") },
                 { "Square Head Idle Gun Looking Left Hands Up", Root.Content.Load<Texture2D>("Textures/Square Head Idle Gun Looking Left Hands Up") },
                 { "Grass P Mini", Root.Content.Load<Texture2D>("Textures/Grass P Mini") },
-                { "Lava Middle", Root.Content.Load<Texture2D>("Textures/Lava Middle") },
-                { "Wall Middle", Root.Content.Load<Texture2D>("Textures/Wall Middle") },
+                { "Black Box", Root.Content.Load<Texture2D>("Textures/BlackBox") },
                 { "Black Pixel", Root.Content.Load<Texture2D>("Textures/Pixels/Black Pixel") },
             };
 

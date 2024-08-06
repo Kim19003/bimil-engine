@@ -89,17 +89,17 @@ namespace Bimil.Game.Scenes
                 previousPosition = newPosition;
             }
 
-            previousPosition = new(0, 0);
-            for (int i = 0; i < 10; i++)
+            previousPosition = new(4, 0);
+            for (int i = 0; i < 50; i++)
             {
                 Vector2 newPosition;
                 if (i == 0)
-                    newPosition = new(0, 0);
+                    newPosition = new(4, 0);
                 else
-                    newPosition = new Vector2(previousPosition.X + 64, previousPosition.Y - random.Next(-64, 64));
-                SomeObject sprite = new("Black Pixel", newPosition)
+                    newPosition = new Vector2(previousPosition.X + 4, previousPosition.Y - random.Next(-4, 4));
+                SomeObject sprite = new("Black Box", newPosition)
                 {
-                    Scale = new(16),
+                    Scale = new(1),
                     CameraLevel = mainCamera.CameraLevel,
                     Interpolation = Interpolation2D.None,
                     SortingLayer = 1,
