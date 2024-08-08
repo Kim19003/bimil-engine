@@ -9,7 +9,7 @@ using System;
 
 namespace Bimil.Engine.Objects.Bases
 {
-    [Obsolete("This class is obsolete and will be removed in the future. Use PhysicsSprite2D instead.")]
+    [Obsolete("This class is obsolete and may be removed in the future. Use PhysicsSprite2D instead.")]
     public abstract class Sprite2D : Transform2D, IStartable, IDrawable, IUpdatable, IDestroyable
     {
         /// <summary>

@@ -18,6 +18,7 @@ using Bimil.Engine.Models.DrawShapes;
 using System.Linq;
 using Bimil.Game.Constants;
 using Bimil.Engine.Other.Extensions;
+using Microsoft.Xna.Framework.Media;
 
 namespace Bimil.Game.Sprites
 {
@@ -132,7 +133,7 @@ namespace Bimil.Game.Sprites
 
             bool isKeyDownLeft = keyboardState.IsKeyDown(Keys.Left);
             bool isKeyDownRight = keyboardState.IsKeyDown(Keys.Right);
-            bool isKeyPressedUp = keyboardState.IsKeyDown(Keys.Up);
+            bool isKeyPressedUp = keyboardState.IsKeyPressed(Keys.Up);
             bool isKeyDownDown = keyboardState.IsKeyDown(Keys.Down);
             bool isKeyShiftDown = keyboardState.IsKeyDown(Keys.LeftShift);
 
@@ -200,7 +201,7 @@ namespace Bimil.Game.Sprites
             if (IsGrounded && isKeyPressedUp) // Jumping
             {
                 Rigidbody2D.Body.LinearVelocity = new Vector2(Rigidbody2D.Body.LinearVelocity.X, -JumpPower);
-                // Root.EngineCore.AudioHandler.PlaySoundEffect("Jump", InterpolatedDrawPosition, InterpolatedDrawPosition);
+                Root.Core.AudioHandler.PlaySoundEffect("Jump", InterpolatedDrawPosition, InterpolatedDrawPosition);
 
                 _isJumping = true;
             }
