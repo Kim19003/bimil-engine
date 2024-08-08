@@ -70,14 +70,14 @@ namespace Bimil.Game.Sprites
             // List<Fixture> fixtures = Core.PhysicsWorld.RayCast(Vector2.Zero, Vector2.Zero); // Use this to raycast
         }
 
-        // RectangleDrawShape bodyDrawShape = new(new(0, 0, 20, 20), Color.Red);
+        RectangleDrawShape bodyDrawShape = new(new(0, 0, 50, 50), Color.Red, 10);
         // CircleDrawShape circle;
         public override void Start()
         {
             // Vector2 position = InterpolatedDrawPosition + new Vector2(-300, 0);
             // circle = new(new((int)position.X, (int)position.Y, 5), Color.Red);
             // AssociatedScene.AddOrUpdateDraw(new(circle, cameraLevel: CameraLevel));
-            // AssociatedScene.AddOrUpdateDraw(new(bodyDrawShape, cameraLevel: Core.ActiveScene.ActiveCameras.First().CameraLevel));
+            AssociatedScene.AddOrUpdateDraw(new(bodyDrawShape, cameraLevel: 0));
 
             Animation left = new(new DuratedTexture(TimeSpan.FromSeconds(1), Root.TextureBatch["Square Head Idle Gun Looking Left"]));
             Animation leftUp = new(new DuratedTexture(TimeSpan.FromSeconds(1), Root.TextureBatch["Square Head Idle Gun Looking Left Hands Up"]));

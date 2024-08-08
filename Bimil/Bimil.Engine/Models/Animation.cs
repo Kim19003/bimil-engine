@@ -11,25 +11,33 @@ namespace Bimil.Engine.Models
         /// The durated textures (textures with durations) in the animation.
         /// </summary>
         public HashSet<DuratedTexture> DuratedTextures { get; } = new();
+
         /// <summary>
         /// The duration of the animation.
         /// </summary>
         public TimeSpan Duration => DuratedTextures.Any()
             ? DuratedTextures.Select(t => t.Duration).Aggregate((a, b) => a + b)
             : TimeSpan.Zero;
+
         /// <summary>
         /// Is the animation playing?
         /// </summary>
-        /// <remarks>If HasFinished is true, this should logically be false.</remarks>
+        /// <remarks>
+        /// If HasFinished is true, this should logically be false.
+        /// </remarks>
         public bool IsPlaying { get; set; } = false;
+
         /// <summary>
         /// Does the animation repeat?
         /// </summary>
         public bool Repeat { get; set; } = true;
+        
         /// <summary>
         /// Has the animation finished playing?
         /// </summary>
-        /// <remarks>If Repeat is true, this should logically be null. Else, if IsPlaying is true, this should logically be false.</remarks>
+        /// <remarks>
+        /// If Repeat is true, this should logically be null. Else, if IsPlaying is true, this should logically be false.
+        /// </remarks>
         public bool? HasFinished { get; set; } = null;
 
         public Animation()

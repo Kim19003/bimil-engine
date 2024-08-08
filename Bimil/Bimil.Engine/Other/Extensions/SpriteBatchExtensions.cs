@@ -9,13 +9,32 @@ namespace Bimil.Engine.Other.Extensions
     {
         public static void DrawRectangle(this SpriteBatch spriteBatch, RectangleDrawShape rectangleDrawShape)
         {
-            Vector2[] vertices = new Vector2[]
+            Vector2[] vertices;
+
+            if (rectangleDrawShape.Radius > 0)
             {
-                new(rectangleDrawShape.Body.X, rectangleDrawShape.Body.Y),
-                new(rectangleDrawShape.Body.X + rectangleDrawShape.Body.Width, rectangleDrawShape.Body.Y),
-                new(rectangleDrawShape.Body.X + rectangleDrawShape.Body.Width, rectangleDrawShape.Body.Y + rectangleDrawShape.Body.Height),
-                new(rectangleDrawShape.Body.X, rectangleDrawShape.Body.Y + rectangleDrawShape.Body.Height)
-            };
+                vertices = new Vector2[]
+                {
+                    new(rectangleDrawShape.Body.X + rectangleDrawShape.Radius, rectangleDrawShape.Body.Y),
+                    new(rectangleDrawShape.Body.X + rectangleDrawShape.Body.Width - rectangleDrawShape.Radius, rectangleDrawShape.Body.Y),
+                    new(rectangleDrawShape.Body.X + rectangleDrawShape.Body.Width, rectangleDrawShape.Body.Y + rectangleDrawShape.Radius),
+                    new(rectangleDrawShape.Body.X + rectangleDrawShape.Body.Width, rectangleDrawShape.Body.Y + rectangleDrawShape.Body.Height - rectangleDrawShape.Radius),
+                    new(rectangleDrawShape.Body.X + rectangleDrawShape.Body.Width - rectangleDrawShape.Radius, rectangleDrawShape.Body.Y + rectangleDrawShape.Body.Height),
+                    new(rectangleDrawShape.Body.X + rectangleDrawShape.Radius, rectangleDrawShape.Body.Y + rectangleDrawShape.Body.Height),
+                    new(rectangleDrawShape.Body.X, rectangleDrawShape.Body.Y + rectangleDrawShape.Body.Height - rectangleDrawShape.Radius),
+                    new(rectangleDrawShape.Body.X, rectangleDrawShape.Body.Y + rectangleDrawShape.Radius)
+                };
+            }
+            else
+            {
+                vertices = new Vector2[]
+                {
+                    new(rectangleDrawShape.Body.X, rectangleDrawShape.Body.Y),
+                    new(rectangleDrawShape.Body.X + rectangleDrawShape.Body.Width, rectangleDrawShape.Body.Y),
+                    new(rectangleDrawShape.Body.X + rectangleDrawShape.Body.Width, rectangleDrawShape.Body.Y + rectangleDrawShape.Body.Height),
+                    new(rectangleDrawShape.Body.X, rectangleDrawShape.Body.Y + rectangleDrawShape.Body.Height)
+                };
+            }
 
             spriteBatch.DrawPolygon(new(vertices, rectangleDrawShape.Color, rectangleDrawShape.LineThickness, rectangleDrawShape.LayerDepth));
         }

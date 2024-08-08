@@ -273,12 +273,12 @@ namespace Bimil.Engine.Functions
             {
                 Viewport cameraViewport = camera.Viewport;
                 Rectangle cameraScreenPointBounds = new(cameraViewport.X, cameraViewport.Y, cameraViewport.Width, cameraViewport.Height);
-                Root.SpriteBatch.DrawRectangle(new(cameraScreenPointBounds, color, lineThickness));
+                Root.SpriteBatch.DrawRectangle(new(cameraScreenPointBounds, color, lineThickness: lineThickness));
             }
             else
             {
                 Rectangle cameraWorldPointBounds = camera.WorldPointBounds;
-                Root.SpriteBatch.DrawRectangle(new(cameraWorldPointBounds, color, lineThickness));
+                Root.SpriteBatch.DrawRectangle(new(cameraWorldPointBounds, color, lineThickness: lineThickness));
             }
         }
 

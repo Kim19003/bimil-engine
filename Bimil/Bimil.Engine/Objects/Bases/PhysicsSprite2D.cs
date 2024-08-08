@@ -18,32 +18,56 @@ namespace Bimil.Engine.Objects.Bases
         /// <summary>
         /// Texture of the sprite.
         /// </summary>
+        /// <remarks>
+        /// The default value is <see langword="null"/>.
+        /// </remarks>
         public Texture2D Texture { get; set; } = null;
+
         /// <summary>
         /// Sprite effects of the sprite.
         /// </summary>
+        /// <remarks>
+        /// The default value is <see cref="SpriteEffects.None"/>.
+        /// </remarks>
         public SpriteEffects SpriteEffects { get; set; } = SpriteEffects.None;
+
         /// <summary>
         /// Sorting layer of the sprite.
         /// </summary>
+        /// <remarks>
+        /// The default value is <c>0f</c>.
+        /// </remarks>
         public float SortingLayer { get; set; } = 0f;
+
         /// <summary>
         /// Physics scale of the transform.
         /// </summary>
+        /// <remarks>
+        /// The default value is <see cref="Vector2.One"/>.
+        /// </remarks>
         public Vector2 PhysicsScale { get; set; } = Vector2.One;
+
         /// <summary>
         /// Rigidbody2D of the sprite.
         /// </summary>
+        /// <remarks>
+        /// The default value is <see langword="null"/>.
+        /// </remarks>
         public Rigidbody2D Rigidbody2D { get; set; } = null;
 
         /// <summary>
         /// Interpolation mode of the sprite.
         /// </summary>
+        /// <remarks>
+        /// The default value is <see cref="Interpolation2D.Interpolate"/>.
+        /// </remarks>
         public Interpolation2D Interpolation { get; set; } = Interpolation2D.Interpolate;
+        
         /// <summary>
         /// Interpolation hotspot of the sprite.
         /// </summary>
         public const float INTERPOLATION_HOTSPOT = 0.03f;
+        
         /// <summary>
         /// Absolute position of the transform (current position multiplied by the texture size).
         /// </summary>
@@ -54,14 +78,23 @@ namespace Bimil.Engine.Objects.Bases
                 return Position * new Vector2(Texture.Width, Texture.Height);
             }
         }
+
         /// <summary>
         /// Last position of the transform, mainly used for position interpolation. You should not modify this value.
         /// </summary>
+        /// <remarks>
+        /// The default value is <see cref="Vector2.Zero"/>.
+        /// </remarks>
         public Vector2 LastAbsolutePosition { get; set; } = Vector2.Zero;
+
         /// <summary>
         /// Last rotation of the transform, mainly used for rotation interpolation. You should not modify this value.
         /// </summary>
+        /// <remarks>
+        /// The default value is <c>0f</c>.
+        /// </remarks>
         public float LastRotation { get; set; } = 0f;
+
         /// <summary>
         /// Calculates and returns the interpolated draw position of the sprite.
         /// </summary>
@@ -73,6 +106,7 @@ namespace Bimil.Engine.Objects.Bases
                 return Vector2.Lerp(LastAbsolutePosition, AbsolutePosition, interpolationAlpha);
             }
         }
+        
         /// <summary>
         /// Calculates and returns the interpolated draw rotation of the sprite.
         /// </summary>
